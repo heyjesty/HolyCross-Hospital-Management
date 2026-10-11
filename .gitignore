@@ -18,3 +18,5 @@ staticfiles/
 .vscode/
 .DS_Store
 Thumbs.db
+
+.env*

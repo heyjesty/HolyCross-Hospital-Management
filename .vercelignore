@@ -13,3 +13,4 @@ media/ProfileImage
 media/*.jpg
 media/*.png
 media/*.ico
+.env.local

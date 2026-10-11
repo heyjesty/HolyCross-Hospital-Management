@@ -1,0 +1,31 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Patient stories{% endblock %}
+{% block heading %}Patient stories{% endblock %}
+
+{% block content %}
+<p class="text-muted small">Stories submitted on the website are hidden until approved here.</p>
+<div class="row g-3">
+{% for s in stories %}
+  <div class="col-lg-6">
+    <div class="panel h-100 d-flex flex-column">
+      <div class="d-flex justify-content-between gap-2 mb-2">
+        <div class="fw-bold">{{ s.Subject }}</div>
+        {% if s.Approved %}<span class="status status-COMPLETED">Published</span>{% else %}<span class="status status-PENDING">Awaiting review</span>{% endif %}
+      </div>
+      <p class="text-muted small flex-grow-1">{{ s.Message }}</p>
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+        <span class="small">{{ s.Name }}{% if s.Email %} · {{ s.Email }}{% endif %}{% if s.Created %} · {{ s.Created|date:"j M Y" }}{% endif %}</span>
+        <div class="d-flex gap-1">
+          <form method="post" action="{% url 'story_action' dataid=s.id %}">{% csrf_token %}
+            {% if s.Approved %}<button class="btn btn-sm btn-light-soft" name="action" value="hide">Hide</button>{% else %}<button class="btn btn-sm btn-primary" name="action" value="approve">Approve</button>{% endif %}
+          </form>
+          <form method="post" action="{% url 'story_action' dataid=s.id %}" data-confirm="Delete this story?">{% csrf_token %}<button class="btn btn-sm btn-link text-danger" name="action" value="delete">Delete</button></form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% empty %}
+  <div class="col-12"><div class="panel"><div class="empty-state"><i class="bi bi-chat-quote"></i><p class="mt-2 mb-0">No stories submitted yet.</p></div></div></div>
+{% endfor %}
+</div>
+{% endblock %}

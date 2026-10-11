@@ -1,0 +1,15 @@
+# Keep the serverless bundle small and free of local data
+.git
+.idea
+.venv
+venv
+env
+**/__pycache__
+*.pyc
+db.sqlite3
+.env
+staticfiles
+media/ProfileImage
+media/*.jpg
+media/*.png
+media/*.ico

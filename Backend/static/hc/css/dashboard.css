@@ -1,0 +1,50 @@
+/* HolyCross — staff dashboard (extends site.css tokens) */
+body.dash { background: #f4f7fb; }
+.dash-shell { display: flex; min-height: 100vh; }
+.dash-sidebar { width: 260px; flex: none; background: var(--hc-ink); color: rgba(255,255,255,.72); padding: 1.25rem 1rem;
+  position: sticky; top: 0; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; }
+.dash-sidebar .brand { color: #fff; padding: .25rem .5rem 1.25rem; }
+.dash-sidebar .brand small { color: rgba(255,255,255,.5); }
+.dash-nav-label { font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.4); margin: 1.25rem .75rem .5rem; }
+.dash-nav a { display: flex; align-items: center; gap: .75rem; color: rgba(255,255,255,.75); padding: .6rem .75rem; border-radius: 10px; font-weight: 500; font-size: .93rem; }
+.dash-nav a:hover { background: rgba(255,255,255,.06); color: #fff; }
+.dash-nav a.active { background: var(--hc-primary); color: #fff; }
+.dash-nav a i { font-size: 1.05rem; width: 20px; text-align: center; }
+.dash-nav .count { margin-left: auto; background: rgba(255,255,255,.14); color: #fff; font-size: .72rem; font-weight: 700; border-radius: 999px; padding: .1rem .5rem; }
+.dash-nav a.active .count { background: rgba(255,255,255,.25); }
+.dash-main { flex: 1; min-width: 0; }
+.dash-topbar { background: #fff; border-bottom: 1px solid var(--hc-border); padding: .9rem 1.75rem; display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 10; }
+.dash-topbar h1 { font-size: 1.2rem; margin: 0; }
+.dash-content { padding: 1.75rem; }
+.panel { background: #fff; border: 1px solid var(--hc-border); border-radius: var(--hc-radius); padding: 1.4rem; }
+.panel-title { font-size: 1rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+.kpi { background: #fff; border: 1px solid var(--hc-border); border-radius: var(--hc-radius); padding: 1.2rem 1.3rem; display: flex; align-items: center; gap: 1rem; height: 100%; }
+.kpi strong { display: block; font-size: 1.7rem; font-weight: 800; letter-spacing: -.03em; line-height: 1.1; }
+.kpi span.label { color: var(--hc-muted); font-size: .85rem; }
+.table-dash { margin: 0; }
+.table-dash th { font-size: .74rem; text-transform: uppercase; letter-spacing: .06em; color: var(--hc-muted); font-weight: 700; border-bottom-width: 1px; white-space: nowrap; }
+.table-dash td { vertical-align: middle; font-size: .92rem; }
+.table-dash tbody tr:hover { background: #fafcfe; }
+.thumb { width: 44px; height: 44px; border-radius: 10px; object-fit: cover; background: var(--hc-bg-soft); flex: none; }
+.thumb-sm { width: 32px; height: 32px; border-radius: 8px; object-fit: contain; }
+.bar-chart { display: flex; align-items: flex-end; gap: .6rem; height: 160px; }
+.bar-chart .bar { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: .35rem; }
+.bar-chart .fill { width: 100%; max-width: 36px; background: var(--hc-primary); border-radius: 6px 6px 2px 2px; min-height: 4px; }
+.bar-chart .bar.today .fill { background: var(--hc-accent); }
+.bar-chart small { font-size: .72rem; color: var(--hc-muted); }
+.bar-chart b { font-size: .78rem; }
+.status-select { border-radius: 999px; font-size: .78rem; font-weight: 600; padding: .25rem 1.8rem .25rem .7rem; width: auto; }
+.filter-bar { display: flex; flex-wrap: wrap; gap: .5rem; }
+.filter-bar .form-control, .filter-bar .form-select { width: auto; flex: 1 1 160px; }
+.chip { display: inline-block; padding: .35rem .85rem; border-radius: 999px; border: 1px solid var(--hc-border); background: #fff; color: var(--hc-ink); font-size: .85rem; font-weight: 600; }
+.chip.active { background: var(--hc-ink); border-color: var(--hc-ink); color: #fff; }
+.dash-login { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(150deg, var(--hc-ink), #123a5e); padding: 24px; }
+.pagination .page-link { border-radius: 8px !important; margin: 0 2px; border: 0; color: var(--hc-ink); }
+.pagination .active .page-link { background: var(--hc-primary); }
+
+@media (max-width: 991.98px) {
+  .dash-sidebar { position: fixed; left: -280px; z-index: 1050; transition: left .25s ease; }
+  .dash-sidebar.open { left: 0; box-shadow: 0 0 0 100vmax rgba(15,34,54,.45); }
+  .dash-content { padding: 1rem; }
+  .dash-topbar { padding: .8rem 1rem; }
+}

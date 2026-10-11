@@ -1,0 +1,35 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Patients{% endblock %}
+{% block heading %}Patients{% endblock %}
+
+{% block content %}
+<div class="panel mb-3">
+  <form method="get" class="filter-bar">
+    <input type="search" name="q" value="{{ query }}" class="form-control" placeholder="Search by name, username or email">
+    <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
+  </form>
+</div>
+<div class="panel p-0">
+  {% if page.object_list %}
+  <div class="table-responsive">
+    <table class="table table-dash">
+      <thead><tr><th class="ps-4">Patient</th><th>Email</th><th>Joined</th><th>Last sign-in</th><th>Appointments</th></tr></thead>
+      <tbody>
+      {% for p in page %}
+        <tr>
+          <td class="ps-4"><div class="d-flex align-items-center gap-2"><span class="avatar">{{ p.username|first|upper }}</span><div><div class="fw-semibold">{{ p.get_full_name|default:p.username }}</div><div class="small text-muted">@{{ p.username }}</div></div></div></td>
+          <td class="small">{{ p.email|default:"—" }}</td>
+          <td class="small">{{ p.date_joined|date:"j M Y" }}</td>
+          <td class="small">{{ p.last_login|date:"j M Y"|default:"Never" }}</td>
+          <td><a class="fw-semibold" href="{% url 'appointments' %}?q={{ p.username|urlencode }}">{{ p.appointment_count }}</a></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "partials/pagination.html" %}
+  {% else %}
+  <div class="empty-state"><i class="bi bi-people"></i><p class="mt-2 mb-0">No patients found.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

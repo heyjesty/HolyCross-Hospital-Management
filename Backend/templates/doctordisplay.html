@@ -1,82 +1,50 @@
-<!DOCTYPE html>
-{% extends "indexpage.html" %}
-{% block content %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<div class="card-body">
-              <h5 class="card-title">DISPLAY DEPARTMENT</h5>
-			  <div class="table-responsive">
-              <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th scope="col">DOCTOR NAME</th>
-                    <th scope="col">DEPARTMENT</th>
-                    <th scope="col">EXPERIENCE</th>
-                    <th scope="col">EDUCATION</th>
-                    <th scope="col">REGISTER NO</th>
-                    <th scope="col">LANGUAGE</th>
-                    <th scope="col">ABOUT</th>
-                    <th scope="col">GENDER</th>
-                    <th scope="col">TIMING</th>
-                    <th scope="col">IMAGE</th>
-                    <th scope="col">EDIT</th>
-                    <th scope="col">DELETE</th>
-                  </tr>
-                </thead>
-                <tbody>
-                {% for i in data %}
-                  <tr>
-                    <td>{{i.Name}}</td>
-                    <td>{{i.Department}}</td>
-                    <td>{{i.Experience}}</td>
-                    <td>{{i.Education}}</td>
-                    <td>{{i.Registrations}}</td>
-                    <td>{{i.Language}}</td>
-                    <td>{{i.About}}</td>
-                    <td>{{i.Gender}}</td>
-                    <td>{{i.Timing}}</td>
-                    <td>
-                        <img src="{{i.Image.url}}" height="50px" width="50px">
-                    </td>
-                    <td>
-                        <form action="{% url 'doctoredit' dataid=i.id %}">
-                            <button class="btn btn-light px-5" >EDIT</button>
-                        </form>
-                    </td>
-                      <td>
-                        <form action="{% url 'doctordel' dataid=i.id %}">
-                            <button class="btn btn-light px-5" >DELETE</button>
-                        </form>
-                    </td>
-                  </tr>
-                {% endfor %}
-                </tbody>
-              </table>
-            </div>
-            </div>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% extends "dashboard_base.html" %}
+{% block title %}Doctors{% endblock %}
+{% block heading %}Doctors{% endblock %}
+{% block actions %}{% if user.is_superuser %}<a href="{% url 'doctorlist' %}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg me-1"></i>Add doctor</a>{% endif %}{% endblock %}
 
-    {% if messages %}
-      {% for i in messages %}
-           {% if i.tags == 'warning' %}
-               <script>
-                    swal('{{i}}','','warning');
-               </script>
-           {% elif i.tags == 'error' %}
-               <script>
-                    swal('{{i}}','','error');
-               </script>
-           {% else %}
-               <script>
-                    swal('{{i}}','','success');
-               </script>
-           {% endif %}
-        {% endfor %}
-    {% endif %}
-</body>
-</html>
+{% block content %}
+<div class="panel mb-3">
+  <form method="get" class="filter-bar">
+    <select name="department" class="form-select" onchange="this.form.submit()" aria-label="Filter by department">
+      <option value="">All departments</option>
+      {% for d in departments %}<option value="{{ d.DeptName }}" {% if d.DeptName == selected_department %}selected{% endif %}>{{ d.DeptName }}</option>{% endfor %}
+    </select>
+  </form>
+</div>
+<div class="panel p-0">
+  {% if data %}
+  <div class="table-responsive">
+    <table class="table table-dash">
+      <thead><tr><th class="ps-4">Doctor</th><th>Department</th><th>Reg. no.</th><th>Shift</th><th>Upcoming</th>{% if user.is_superuser %}<th class="text-end pe-4">Actions</th>{% endif %}</tr></thead>
+      <tbody>
+      {% for d in data %}
+        <tr>
+          <td class="ps-4">
+            <div class="d-flex align-items-center gap-3">
+              {% if d.Image %}<img class="thumb" src="{{ d.Image.url }}" alt="">{% else %}<span class="thumb d-inline-flex align-items-center justify-content-center"><i class="bi bi-person"></i></span>{% endif %}
+              <div><a class="fw-semibold text-reset" href="{% url 'singledoctor' proid=d.id %}" target="_blank" rel="noopener">{{ d.Name }}</a><div class="small text-muted">{{ d.Education }} · {{ d.Experience }}</div></div>
+            </div>
+          </td>
+          <td>{{ d.Department }}</td>
+          <td class="small">{{ d.Registrations }}</td>
+          <td class="small">{{ d.Timing|lower|capfirst }}</td>
+          <td><a href="{% url 'appointments' %}?q={{ d.Name|urlencode }}&when=upcoming" class="fw-semibold">{{ d.upcoming }}</a></td>
+          {% if user.is_superuser %}
+          <td class="text-end pe-4 text-nowrap">
+            <a href="{% url 'doctoredit' dataid=d.id %}" class="btn btn-sm btn-light-soft"><i class="bi bi-pencil"></i> Edit</a>
+            <form method="post" action="{% url 'doctordel' dataid=d.id %}" class="d-inline" data-confirm="Remove {{ d.Name }}? Existing appointments are kept.">
+              {% csrf_token %}<button class="btn btn-sm btn-link text-danger" type="submit" aria-label="Delete"><i class="bi bi-trash"></i></button>
+            </form>
+          </td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state"><i class="bi bi-person-badge"></i><p class="mt-2">No doctors found.</p></div>
+  {% endif %}
+</div>
 {% endblock %}

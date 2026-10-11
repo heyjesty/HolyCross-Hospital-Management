@@ -1,0 +1,55 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Appointments{% endblock %}
+{% block heading %}Appointments{% endblock %}
+
+{% block content %}
+<div class="panel mb-3">
+  <div class="d-flex flex-wrap gap-2 mb-3">
+    <a href="?{% if status %}status={{ status }}&{% endif %}" class="chip {% if not when %}active{% endif %}">All dates</a>
+    <a href="?when=today{% if status %}&status={{ status }}{% endif %}" class="chip {% if when == 'today' %}active{% endif %}">Today</a>
+    <a href="?when=upcoming{% if status %}&status={{ status }}{% endif %}" class="chip {% if when == 'upcoming' %}active{% endif %}">Upcoming</a>
+    <a href="?when=past{% if status %}&status={{ status }}{% endif %}" class="chip {% if when == 'past' %}active{% endif %}">Past</a>
+  </div>
+  <form method="get" class="filter-bar">
+    <input type="hidden" name="when" value="{{ when }}">
+    <input type="search" name="q" value="{{ query }}" class="form-control" placeholder="Search patient, doctor, phone, email or reg. no.">
+    <select name="status" class="form-select" onchange="this.form.submit()">
+      <option value="">Any status</option>
+      {% for key, label in status_choices %}<option value="{{ key }}" {% if key == status %}selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select>
+    <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
+  </form>
+</div>
+
+<div class="panel p-0">
+  {% if page.object_list %}
+  <div class="table-responsive">
+    <table class="table table-dash">
+      <thead><tr><th class="ps-4">Ref.</th><th>Patient</th><th>Doctor</th><th>Date &amp; time</th><th>Status</th>{% if user.is_superuser %}<th></th>{% endif %}</tr></thead>
+      <tbody>
+      {% for a in page %}
+        <tr>
+          <td class="ps-4 small fw-semibold">{{ a.reference }}</td>
+          <td>{{ a.Name }}<div class="small text-muted">{{ a.Phone }}{% if a.Email %} · {{ a.Email }}{% endif %}</div>{% if a.Reason %}<div class="small text-muted fst-italic">“{{ a.Reason|truncatechars:60 }}”</div>{% endif %}</td>
+          <td>{{ a.DrName }}<div class="small text-muted">{{ a.Department }}</div></td>
+          <td class="text-nowrap">{{ a.Date|date:"j M Y" }}<div class="small text-muted">{{ a.Time|time:"g:i A" }}</div></td>
+          <td>{% include "partials/status_form.html" %}</td>
+          {% if user.is_superuser %}
+          <td class="text-end pe-3">
+            <form method="post" action="{% url 'deleteindex' dataid=a.id %}" data-confirm="Permanently delete {{ a.reference }}?">
+              {% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}">
+              <button class="btn btn-sm btn-link text-danger" type="submit" aria-label="Delete"><i class="bi bi-trash"></i></button>
+            </form>
+          </td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "partials/pagination.html" %}
+  {% else %}
+  <div class="empty-state"><i class="bi bi-calendar-x"></i><p class="mt-2 mb-0">No appointments match these filters.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

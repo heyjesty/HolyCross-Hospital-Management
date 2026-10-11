@@ -1,550 +1,205 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
 {% load static %}
-<html lang="en">
-  <head>
-    <title>HolyCross Hospital Management</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700" rel="stylesheet">
-	<link rel="icon" href="{% static 'assets/images/vejq5m3sm4396c01m3etnnp4r8.png' %}" type="image/x-icon">
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+{% block content %}
+<section class="hero">
+  <div class="container position-relative">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <span class="eyebrow"><i class="bi bi-heart-pulse"></i> Trusted multi-speciality care</span>
+        <h1 class="mb-4">Expert doctors.<br><span class="hl">Appointments in minutes.</span></h1>
+        <p class="lead mb-4">Find the right specialist at {{ HOSPITAL.name }}, choose a time that suits you, and manage every visit from your patient account.</p>
 
-    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+        <form class="search-card" method="get" action="{% url 'doctor_list' %}" role="search">
+          <label class="visually-hidden" for="hero-dept">Department</label>
+          <select id="hero-dept" name="department" class="form-select">
+            <option value="">All departments</option>
+            {% for dept in departments %}<option value="{{ dept.DeptName }}">{{ dept.DeptName }}</option>{% endfor %}
+          </select>
+          <label class="visually-hidden" for="hero-q">Doctor name</label>
+          <input id="hero-q" type="search" name="q" class="form-control" placeholder="Doctor name">
+          <button class="btn btn-primary px-4" type="submit"><i class="bi bi-search me-1"></i>Find</button>
+        </form>
 
-    <link rel="stylesheet" href="{% static 'css/aos.css' %}">
-
-    <link rel="stylesheet" href="{% static 'css/ionicons.min.css' %}">
-
-    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css' %}">
-    <link rel="stylesheet" href="{% static 'css/jquery.timepicker.css' %}">
-
-
-    <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
-    <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  </head>
-  <body>
-
-	  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-	    <div class="container">
-	      <a class="navbar-brand" href="#">HOLY<span>CROSS</span></a>
-	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-	        <span class="oi oi-menu"></span> Menu
-	      </button>
-
-	      <div class="collapse navbar-collapse" id="ftco-nav">
-	        <ul class="navbar-nav ml-auto">
-	          <li class="nav-item active"><a href="{% url 'index' %}" class="nav-link">Home</a></li>
-	          <li class="nav-item"><a href="{% url 'aboutus' %}" class="nav-link">About</a></li>
-	          <li class="nav-item"><a href="{% url 'service' %}" class="nav-link">Services</a></li>
-	          <li class="nav-item"><a href="{% url 'blog' %}" class="nav-link">Blog</a></li>
-	          <li class="nav-item"><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
-                 <form method="get">
-<p>
-    <input style="border-radius:20px; border:0.1px solid white; height:35px;background-color: transparent; color:white; padding-left:10px; margin-top:10px  "  type="text" name="search_query" value="" maxlength="100" id="id_search_query">
-    <a onclick="autoScroll()"  class="btn btn-outline-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-</svg></a>
-    </p>
-</form>
-                <li class="nav-item dropdown">
-                    {% if request.session.username %}
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Hi,{{request.session.username}}
-          </a>
-                {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'loginfr' %}">Register/Login</a></li>
-                {% endif %}
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-          </ul>
-        </li>
-	        </ul>
-	      </div>
-	    </div>
-	  </nav>
-    <!-- END nav -->
-    <section class="home-slider owl-carousel">
-            <div class="slider-item" style="background-image: url({% static 'images/bg_1.jpg' %});">
-        <div class="overlay"></div>
-        <div class="container">
-          <div class="row slider-text align-items-center" data-scrollax-parent="true">
-            <div class="col-md-6 col-sm-12 ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
-              <h1 class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Your Health, Your Schedule</h1>
-              <p class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">HolyCross Health Scheduler: Your go-to tool for scheduling doctor appointments effortlessly.</p>
-
-            </div>
+        <div class="trust-row">
+          <span><i class="bi bi-patch-check-fill"></i>Registered specialists</span>
+          <span><i class="bi bi-shield-lock-fill"></i>Secure patient records</span>
+          <span><i class="bi bi-lightning-charge-fill"></i>Instant booking</span>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="hero-media">
+          <img src="{% static 'hc/img/hero.jpg' %}" alt="A HolyCross doctor with patients in a ward" fetchpriority="high">
+          <div class="float-card one">
+            <span class="icon-pill accent"><i class="bi bi-calendar2-check"></i></span>
+            <div><strong class="d-block">Book online 24/7</strong><span class="text-muted small">Confirmed by our front desk</span></div>
+          </div>
+          <div class="float-card two">
+            <span class="icon-pill"><i class="bi bi-people-fill"></i></span>
+            <div><strong class="d-block">{{ doctor_total }}+ specialists</strong><span class="text-muted small">across {{ department_total }} departments</span></div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
 
-      <div class="slider-item" style="background-image: url({% static 'images/bg_2.jpg' %});">
-        <div class="overlay"></div>
-        <div class="container">
-          <div class="row slider-text align-items-center" data-scrollax-parent="true">
-            <div class="col-md-6 col-sm-12 ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
-              <h1 class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Empowering Your Health Choices with HolyCross</h1>
-              <p class="mb-4">HolyCross: Your trusted companion for seamless doctor appointments and medical bookings.</p>
-            </div>
+<section class="info-strip">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="info-card">
+          <span class="icon-pill danger"><i class="bi bi-truck-front"></i></span>
+          <div>
+            <h3>Emergency care</h3>
+            <p>Our emergency team and ambulance are available around the clock.</p>
+            <a class="fw-bold d-inline-block mt-2" style="color:var(--hc-danger)" href="tel:{{ HOSPITAL.emergency|cut:' ' }}">{{ HOSPITAL.emergency }}</a>
           </div>
         </div>
       </div>
-    </section>
-
-    <section class="ftco-intro">
-    	<div class="container">
-    		<div class="row no-gutters">
-    			<div class="col-md-3 color-1 p-4">
-    				<h3 class="mb-4">Emergency Cases</h3>
-    				<p>Emergency Booking Hub</p>
-    				<span class="phone-number">+91 8590569016</span>
-    			</div>
-    			<div class="col-md-3 color-2 p-4">
-    				<h3 class="mb-4">Opening Hours</h3>
-    				<p class="openinghours d-flex">
-    					<span>Monday - Friday</span>
-    					<span>8:00 - 19:00</span>
-    				</p>
-    				<p class="openinghours d-flex">
-    					<span>Saturday</span>
-    					<span>10:00 - 17:00</span>
-    				</p>
-    				<p class="openinghours d-flex">
-    					<span>Sunday</span>
-    					<span>10:00 - 16:00</span>
-    				</p>
-    			</div>
-    			<div class="col-md-6 color-3 p-4">
-    				<h3 class="mb-2">Make an Appointment</h3>
-    				<form method="post" action="{% url 'appoinmentsave' %}" class="appointment-form">
-                        {% csrf_token %}
-	            <div class="row">
-	            	<div class="col-sm-4">
-	                <div class="form-group">
-			              <div class="select-wrap">
-                      <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                      <select name="department" class="form-control">
-                      	<option style="color:black;">Department</option>
-						  {% for i in data %}
-                        <option style="color:black;">{{i.DeptName}}</option>
-						  {% endfor %}
-                      </select>
-                    </div>
-			            </div>
-	              </div>
-	              <div class="col-sm-4">
-	                <div class="form-group">
-	                	<div class="icon"><span class="icon-user"></span></div>
-			              <input type="text" name="name" class="form-control" placeholder="Name">
-			            </div>
-	              </div>
-	              <div class="col-sm-4">
-	                <div class="form-group">
-	                	<div class="icon"><span class="icon-paper-plane"></span></div>
-			              <input type="text" name="email" class="form-control" placeholder="Email">
-			            </div>
-	              </div>
-	            </div>
-	            <div class="row">
-	              <div class="col-sm-4">
-	                <div class="form-group">
-	                	<div class="icon"><span class="ion-ios-calendar"></span></div>
-	                  <input type="text" name="date" class="form-control appointment_date" placeholder="Date">
-	                </div>
-	              </div>
-	              <div class="col-sm-4">
-	                <div class="form-group">
-	                	<div class="icon"><span class="ion-ios-clock"></span></div>
-	                  <input type="text" name="time" class="form-control appointment_time" placeholder="Time">
-	                </div>
-	              </div>
-	              <div class="col-sm-4">
-	                <div class="form-group">
-	                	<div class="icon"><span class="icon-phone2"></span></div>
-	                  <input type="text" name="phone" class="form-control" id="phone" placeholder="Phone">
-	                </div>
-	              </div>
-	            </div>
-
-	            <div class="form-group">
-	              <input type="submit" value="Make an Appointment" class="btn btn-primary">
-	            </div>
-	          </form>
-    			</div>
-    		</div>
-    	</div>
-    </section>
-     <div id="scrollTarget">
-    <section class="ftco-section ftco-services">
-      <div class="container">
-      	<div class="row justify-content-center mb-5 pb-5">
-          <div class="col-md-7 text-center heading-section ftco-animate">
-            <h2 class="mb-2">Our Service Keeps you Happy</h2>
-            <p>Welcome to HolyCross Health Scheduler! Our platform is designed to make managing your healthcare appointments as simple as possible. </p>
-          </div>
-        </div>
-
-        <div class="row">
-            {% for doctor in doctors %}
-          <div class="col-md-3 d-flex align-self-stretch ftco-animate">
-            <div class="media block-6 services d-block text-center">
-              <div class="icon d-flex justify-content-center align-items-center">
-            		<img src="{{doctor.Image.url}}" height="50px" width="50px">
-              </div>
-
-              <div class="media-body p-2 mt-3">
-                  <a href=""><h3 class="heading">{{doctor.DeptName}}</h3></a>
-              </div>
-
-            </div>
-          </div>
-            {% endfor %}
-      </div>
-          <div class="row">
-          <div class="col-md-3 d-flex align-self-stretch ftco-animate">
-            <div class="media block-6 services d-block text-center">
-              <div class="icon d-flex justify-content-center align-items-center">
-            		<img src="/media/images/dentist.webp" height="50px" width="50px">
-              </div>
-
-              <div class="media-body p-2 mt-3">
-                  <a href="http://127.0.0.1:8000/doctors/Dental%20Care/"><h3 class="heading">Dental Care</h3></a>
-              </div>
-
-            </div>
-          </div>
-               <div class="col-md-3 d-flex align-self-stretch ftco-animate">
-            <div class="media block-6 services d-block text-center">
-              <div class="icon d-flex justify-content-center align-items-center">
-            		<img src="/media/images/ic_orthopaedics.webp" height="50px" width="50px">
-              </div>
-
-              <div class="media-body p-2 mt-3">
-                  <a href="http://127.0.0.1:8000/doctors/Orthopedics/"><h3 class="heading">Orthopedics</h3></a>
-              </div>
-
-            </div>
-          </div>
-               <div class="col-md-3 d-flex align-self-stretch ftco-animate">
-            <div class="media block-6 services d-block text-center">
-              <div class="icon d-flex justify-content-center align-items-center">
-            	<img src="/media/images/covid_consultation.webp" height="50px" width="50px">
-              </div>
-
-              <div class="media-body p-2 mt-3">
-                  <a href="http://127.0.0.1:8000/doctors/Covid%20consultation/"><h3 class="heading">Covid consultation</h3></a>
-              </div>
-
-            </div>
-          </div>
-               <div class="col-md-3 d-flex align-self-stretch ftco-animate">
-            <div class="media block-6 services d-block text-center">
-              <div class="icon d-flex justify-content-center align-items-center">
-            		<img src="/media/images/cardiology.webp" height="50px" width="50px">
-              </div>
-
-              <div class="media-body p-2 mt-3">
-                  <a href="http://127.0.0.1:8000/doctors/Cardiology/"><h3 class="heading">Cardiology</h3></a>
-              </div>
-            </div>
-          </div>
-							<a href="{% url 'service' %}" class="btn btn-outline-primary">Show Details</a>
-
-      </div>
-    </section>
-</div>
-
-    <section class="ftco-section">
-      <div class="container">
-      	<div class="row justify-content-center mb-5 pb-5">
-          <div class="col-md-7 text-center heading-section ftco-animate">
-            <h2 class="mb-3">Meet Our Experience Doctors</h2>
-            <p>Discover our team of seasoned and skilled medical experts who are committed to your well-being. Our experienced doctors bring years of expertise to ensure you receive the best care possible.</p>
-          </div>
-        </div>
-        <div class="row">
-        	<div class="col-lg-3 col-md-2 d-flex mb-sm-4 ftco-animate">
-        		<div class="staff">
-      				<div class="img mb-4 " style="background-image: url(/media/dr-img/gg.jpg);"></div>
-      				<div class="info text-center">
-      					<h3><a href="#">Dr. Veena</a></h3>
-      					<span class="position">Cardiology</span>
-      					<div class="text">
-							<a href="http://127.0.0.1:8000/singledoctor/6/" class="btn btn-outline-primary">Show Details</a>
-
-	        			</div>
-      				</div>
-        		</div>
-        	</div>
-            <div class="col-lg-3 col-md-2 d-flex mb-sm-4 ftco-animate">
-        		<div class="staff">
-      				<div class="img mb-4 " style="background-image: url(/media/dr-img/pexels-antoni-shkraba-5215017.jpg);"></div>
-      				<div class="info text-center">
-      					<h3><a href="#">Dr. Sindu G</a></h3>
-      					<span class="position">Cardiology</span>
-      					<div class="text">
-							<a href="http://127.0.0.1:8000/singledoctor/7/" class="btn btn-outline-primary">Show Details</a>
-
-	        			</div>
-      				</div>
-        		</div>
-        	</div>
-            <div class="col-lg-3 col-md-2 d-flex mb-sm-4 ftco-animate">
-        		<div class="staff">
-      			<div class="img mb-4 " style="background-image: url(/media/dr-img/pexels-tran-nhu-tuan-14438787.jpg);"></div>
-      				<div class="info text-center">
-      					<h3><a href="#">Dr. Meena</a></h3>
-      					<span class="position">Covid consultation</span>
-      					<div class="text">
-							<a href="http://127.0.0.1:8000/singledoctor/13/" class="btn btn-outline-primary">Show Details</a>
-
-	        			</div>
-      				</div>
-        		</div>
-        	</div>
-            <div class="col-lg-3 col-md-2 d-flex mb-sm-4 ftco-animate">
-        		<div class="staff">
-      				<div class="img mb-4 " style="background-image: url(/media/dr-img/pexels-cottonbro-studio-5722166.jpg);"></div>
-      				<div class="info text-center">
-      					<h3><a href="">Dr. Amritha</a></h3>
-      					<span class="position">Covid consultation</span>
-      					<div class="text">
-							<a href="http://127.0.0.1:8000/singledoctor/14/" class="btn btn-outline-primary">Show Details</a>
-
-	        			</div>
-      				</div>
-        		</div>
-        	</div>
-
-        </div>
-      </div>
-    </section>
-    <section class="ftco-section ftco-counter img" id="section-counter" style="background-image: url({% static 'images/bg_1.jpg' %});" data-stellar-background-ratio="0.5">
-    	<div class="container">
-    		<div class="row d-flex align-items-center">
-    			<div class="col-md-3 aside-stretch py-5">
-    				<div class=" heading-section heading-section-white ftco-animate pr-md-4">
-	            <h2 class="mb-3">Achievements</h2>
-	            <p>Achievements are a testament to dedication and hard work.</p>
-	          </div>
-    			</div>
-    			<div class="col-md-9 py-5 pl-md-5">
-		    		<div class="row">
-		          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
-		            <div class="block-18">
-		              <div class="text">
-		                <strong class="number" data-number="20">0</strong>
-		                <span>Years of Experience</span>
-		              </div>
-		            </div>
-		          </div>
-		          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
-		            <div class="block-18">
-		              <div class="text">
-		                <strong class="number" data-number="40">0</strong>
-		                <span>Qualified Doctors</span>
-		              </div>
-		            </div>
-		          </div>
-		          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
-		            <div class="block-18">
-		              <div class="text">
-		                <strong class="number" data-number="4200">0</strong>
-		                <span>Happy Smiling Customer</span>
-		              </div>
-		            </div>
-		          </div>
-		          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
-		            <div class="block-18">
-		              <div class="text">
-		                <strong class="number" data-number="320">0</strong>
-		                <span>Patients Per Year</span>
-		              </div>
-		            </div>
-		          </div>
-		        </div>
-		      </div>
-	      </div>
-    	</div>
-    </section>
-
-		<section class="ftco-section testimony-section bg-light">
-      <div class="container">
-        <div class="row justify-content-center mb-5 pb-3">
-          <div class="col-md-7 text-center heading-section ftco-animate">
-            <h2 class="mb-2">Testimony</h2>
-            <span class="subheading">Our Happy Customer Says</span>
-          </div>
-        </div>
-        <div class="row justify-content-center ftco-animate">
-          <div class="col-md-8">
-            <div class="carousel-testimony owl-carousel ftco-owl">
-                {% for i in bl %}
-              <div class="item">
-                <div class="testimony-wrap p-4 pb-5">
-                  <div class="user-img mb-5" style="background-image: url({% static 'images/person_1.jpg' %})">
-                    <span class="quote d-flex align-items-center justify-content-center">
-                      <i class="icon-quote-left"></i>
-                    </span>
-                  </div>
-                  <div class="text text-center">
-                      <p class="name">{{i.Name}}</p>
-                      <p class="mb-5">{{i.Subject}}</p>
-                    <p class="mb-5">{{i.Message}}</p>
-                  </div>
-                </div>
-
-              </div>
-                  {% endfor %}
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <footer class="ftco-footer ftco-bg-dark ftco-section">
-      <div class="container">
-        <div class="row mb-5">
-          <div class="col-md-3">
-            <div class="ftco-footer-widget mb-4">
-              <h2 class="ftco-heading-2">DentaCare</h2>
-              <p>Welcome to HolyCross Health Scheduler! Our platform is designed to make managing your healthcare appointments as simple as possible.</p>
-            </div>
-            <ul class="ftco-footer-social list-unstyled float-md-left float-lft ">
-              <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
-              <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
-              <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+      <div class="col-md-4">
+        <div class="info-card">
+          <span class="icon-pill"><i class="bi bi-clock-history"></i></span>
+          <div class="flex-grow-1">
+            <h3>Outpatient hours</h3>
+            <ul class="hours">
+              <li><span>Monday – Friday</span><span>8:00 – 19:00</span></li>
+              <li><span>Saturday</span><span>10:00 – 17:00</span></li>
+              <li><span>Sunday</span><span>10:00 – 16:00</span></li>
             </ul>
           </div>
-          <div class="col-md-2">
-            <div class="ftco-footer-widget mb-4 ml-md-5">
-              <h2 class="ftco-heading-2">Quick Links</h2>
-              <ul class="list-unstyled">
-                <li><a href="{% url 'indexpage' %}" class="py-2 d-block">Backend</a></li>
-                <li><a href="{% url 'index' %}" class="py-2 d-block">Home</a></li>
-                <li><a href="{% url 'aboutus' %}" class="py-2 d-block">About</a></li>
-                <li><a href="{% url 'service' %}" class="py-2 d-block">Service</a></li>
-                <li><a href="{% url 'blog' %}" class="py-2 d-block">Blog</a></li>
-                <li><a href="{% url 'contact' %}" class="py-2 d-block">Contact</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-md-4 pr-md-4">
-            <div class="ftco-footer-widget mb-4">
-              <h2 class="ftco-heading-2">Recent Blog</h2>
-              <div class="block-21 mb-4 d-flex">
-                <a class="blog-img mr-4" style="background-image: url({% static 'images/image_1.jpg' %});"></a>
-                <div class="text">
-                  <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about</a></h3>
-                  <div class="meta">
-                    <div><a href="#"><span class="icon-calendar"></span> Sept 15, 2018</a></div>
-                    <div><a href="#"><span class="icon-person"></span> Admin</a></div>
-                    <div><a href="#"><span class="icon-chat"></span> 19</a></div>
-                  </div>
-                </div>
-              </div>
-              <div class="block-21 mb-4 d-flex">
-                <a class="blog-img mr-4" style="background-image: url({% static 'images/image_2.jpg' %});"></a>
-                <div class="text">
-                  <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about</a></h3>
-                  <div class="meta">
-                    <div><a href="#"><span class="icon-calendar"></span> Sept 15, 2018</a></div>
-                    <div><a href="#"><span class="icon-person"></span> Admin</a></div>
-                    <div><a href="#"><span class="icon-chat"></span> 19</a></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="ftco-footer-widget mb-4">
-            	<h2 class="ftco-heading-2">Office</h2>
-            	<div class="block-23 mb-3">
-	              <ul>
-	                <li><span class="icon icon-map-marker"></span><span class="text">Holy Cross Hospital, Kochi, Kerala, India</span></li>
-	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+91 8590569016</span></a></li>
-	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">holycross@gmail.com</span></a></li>
-	              </ul>
-	            </div>
-            </div>
-          </div>
         </div>
-        <div class="row">
-          <div class="col-md-12 text-center">
+      </div>
+      <div class="col-md-4">
+        <div class="info-card">
+          <span class="icon-pill accent"><i class="bi bi-phone"></i></span>
+          <div>
+            <h3>Book your visit online</h3>
+            <p>Pick a specialist, choose a slot and get a booking reference instantly.</p>
+            <a class="fw-bold d-inline-block mt-2" href="{% url 'doctor_list' %}">Start booking <i class="bi bi-arrow-right"></i></a>
           </div>
         </div>
       </div>
-    </footer>
+    </div>
+  </div>
+</section>
 
+<section class="section">
+  <div class="container">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-5">
+      <div>
+        <span class="eyebrow">Departments</span>
+        <h2 class="section-title">Specialist care under one roof</h2>
+        <p class="section-lead mb-0">From preventive check-ups to advanced procedures, our departments work together around you.</p>
+      </div>
+      <a href="{% url 'service' %}" class="btn btn-outline-primary flex-none">All departments</a>
+    </div>
+    <div class="row g-4">
+      {% for dept in featured_departments %}
+      <div class="col-sm-6 col-lg-3">
+        <a href="{% url 'doctor_list' %}?department={{ dept.DeptName|urlencode }}" class="hc-card hover dept-card d-block text-reset">
+          <span class="icon-pill">{% if dept.Image %}<img src="{{ dept.Image.url }}" alt="">{% else %}<i class="bi bi-hospital"></i>{% endif %}</span>
+          <h3>{{ dept.DeptName }}</h3>
+          <p>{{ dept.Description|default:"Specialist consultation and treatment." }}</p>
+          <span class="meta">{{ dept.doctor_count }} doctor{{ dept.doctor_count|pluralize }} <i class="bi bi-arrow-right"></i></span>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
 
-  <script src="{% static 'js/jquery.min.js' %}"></script>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-  <script src="{% static 'js/jquery-migrate-3.0.1.min.js' %}"></script>
-  <script src="{% static 'js/popper.min.js' %}"></script>
-  <script src="{% static 'js/bootstrap.min.js' %}"></script>
-  <script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
-  <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-  <script src="{% static 'js/jquery.stellar.min.js' %}"></script>
-  <script src="{% static 'js/owl.carousel.min.js' %}"></script>
-  <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
-  <script src="{% static 'js/aos.js' %}"></script>
-  <script src="{% static 'js/jquery.animateNumber.min.js' %}"></script>
-  <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
-  <script src="{% static 'js/jquery.timepicker.min.js' %}"></script>
-  <script src="{% static 'js/scrollax.min.js' %}"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-  <script src="{% static 'js/google-.js' %}"></script>
-  <script src="{% static 'js/main.js' %}"></script>
-	<script type="text/javascript">
-    (function(d, m){
-        var kommunicateSettings =
-            {"appId":"1d89d671181ef5b740012c418f3322a20","popupWidget":true,"automaticChatOpenOnNavigation":true};
-        var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
-        s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
-        var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
-        window.kommunicate = m; m._globals = kommunicateSettings;
-    })(document, window.kommunicate || {});
-/* NOTE : Use web server to view HTML files as real-time update will not work if you directly open the HTML file in the browser. */
-</script>
-  <script>
-function autoScroll() {
-    // Set the target element you want to scroll to
-    var targetElement = document.getElementById("scrollTarget");
+<section class="section bg-soft">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-5">
+        <span class="eyebrow">Why HolyCross</span>
+        <h2 class="section-title">Healthcare that fits around your life</h2>
+        <p class="section-lead">We combine experienced clinicians with simple digital tools, so getting care is never the hard part.</p>
+        <a href="{% url 'aboutus' %}" class="btn btn-primary mt-3">Learn about us</a>
+      </div>
+      <div class="col-lg-7">
+        <div class="row g-4">
+          <div class="col-sm-6"><div class="hc-card feature"><span class="icon-pill"><i class="bi bi-person-badge"></i></span><h3>Experienced specialists</h3><p>Registered consultants with years of practice in their field.</p></div></div>
+          <div class="col-sm-6"><div class="hc-card feature"><span class="icon-pill accent"><i class="bi bi-calendar-week"></i></span><h3>Real-time slots</h3><p>See available times for each doctor and book without phone queues.</p></div></div>
+          <div class="col-sm-6"><div class="hc-card feature"><span class="icon-pill accent"><i class="bi bi-camera-video"></i></span><h3>Video consultations</h3><p>Follow-ups and second opinions from the comfort of your home.</p></div></div>
+          <div class="col-sm-6"><div class="hc-card feature"><span class="icon-pill"><i class="bi bi-shield-check"></i></span><h3>Private &amp; secure</h3><p>Your account and appointment history are protected and only visible to you.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    // Calculate the target position
-    var targetPosition = targetElement.offsetTop;
+{% if doctors %}
+<section class="section">
+  <div class="container">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-5">
+      <div>
+        <span class="eyebrow">Our doctors</span>
+        <h2 class="section-title">Meet some of our specialists</h2>
+        <p class="section-lead mb-0">Read their profiles, check languages spoken, and book directly with the doctor you trust.</p>
+      </div>
+      <a href="{% url 'doctor_list' %}" class="btn btn-outline-primary">View all doctors</a>
+    </div>
+    <div class="row g-4">
+      {% for doctor in doctors %}
+      <div class="col-sm-6 col-lg-3">{% include "partials/doctor_card.html" %}</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
 
-    // Scroll smoothly to the target position
-    window.scrollTo({
-        top: targetPosition,
-        behavior: "smooth"
-    });
-}
-</script>
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<section class="section-sm">
+  <div class="container">
+    <div class="stats-band">
+      <div class="row g-4 text-center">
+        <div class="col-6 col-md-3 stat"><strong data-count="20" data-suffix="+">20+</strong><span>Years of service</span></div>
+        <div class="col-6 col-md-3 stat"><strong data-count="{{ doctor_total }}">{{ doctor_total }}</strong><span>Specialist doctors</span></div>
+        <div class="col-6 col-md-3 stat"><strong data-count="{{ department_total }}">{{ department_total }}</strong><span>Departments</span></div>
+        <div class="col-6 col-md-3 stat"><strong data-count="4200" data-suffix="+">4,200+</strong><span>Patients cared for</span></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    {% if messages %}
-      {% for i in messages %}
-           {% if i.tags == 'warning' %}
-               <script>
-                    swal('{{i}}','','warning');
-               </script>
-           {% elif i.tags == 'error' %}
-               <script>
-                    swal('{{i}}','','error');
-               </script>
-           {% else %}
-               <script>
-                    swal('{{i}}','','success');
-               </script>
-           {% endif %}
-        {% endfor %}
-    {% endif %}
-  </body>
-</html>
+{% if stories %}
+<section class="section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="eyebrow">Patient stories</span>
+      <h2 class="section-title">What our patients say</h2>
+    </div>
+    <div class="row g-4">
+      {% for story in stories|slice:":3" %}
+      <div class="col-md-4">
+        <figure class="story-card m-0">
+          <span class="quote"><i class="bi bi-quote"></i></span>
+          <h3>{{ story.Subject }}</h3>
+          <blockquote class="m-0"><p>{{ story.Message|truncatewords:45 }}</p></blockquote>
+          <figcaption class="who"><span class="avatar">{{ story.Name|first|upper }}</span>{{ story.Name }}</figcaption>
+        </figure>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-4"><a href="{% url 'blog' %}" class="fw-semibold">Read more stories <i class="bi bi-arrow-right"></i></a></div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section pt-0">
+  <div class="container">
+    <div class="cta">
+      <div class="row align-items-center g-4 position-relative" style="z-index:1">
+        <div class="col-lg-8">
+          <h2 class="mb-2">Ready to see a specialist?</h2>
+          <p class="mb-0">Create a free patient account to book appointments, view your history and receive updates from our team.</p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          <a href="{% url 'doctor_list' %}" class="btn btn-accent btn-lg">Book an appointment</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

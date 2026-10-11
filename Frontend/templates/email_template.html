@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
-<head></head>
-<body>
-    <h2>New Contact Form Submission</h2>
-    <p><strong>Name:</strong> {{ message_name }}</p>
-    <p><strong>Email:</strong> {{ message_email }}</p>
-    <p><strong>Subject:</strong> {{ message_subject }}</p>
-    <p><strong>Message:</strong> {{ message }}</p>
+<body style="font-family:Arial,Helvetica,sans-serif;color:#0f2236">
+  <h2 style="color:#0b5fa5">New website enquiry</h2>
+  <p><strong>Name:</strong> {{ msg.Name }}</p>
+  <p><strong>Email:</strong> {{ msg.Email }}</p>
+  {% if msg.Phone %}<p><strong>Phone:</strong> {{ msg.Phone }}</p>{% endif %}
+  <p><strong>Subject:</strong> {{ msg.Subject }}</p>
+  <p><strong>Message:</strong><br>{{ msg.Message|linebreaksbr }}</p>
 </body>
 </html>

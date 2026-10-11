@@ -1,284 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Contact us — {{ HOSPITAL.name }}{% endblock %}
 
-<!DOCTYPE html>
-{% load static %}
-<html lang="en">
-  <head>
-    <title>HolyCross Hospital Management</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% block content %}
+{% include "partials/page_header.html" with heading="Contact us" subheading="Questions about a visit, a department or your booking? We're here to help." %}
 
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700" rel="stylesheet">
-    <link rel="icon" href="{% static 'assets/images/vejq5m3sm4396c01m3etnnp4r8.png' %}" type="image/x-icon">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+<section class="section pt-5">
+  <div class="container">
+    <div class="row g-4 mb-5">
+      <div class="col-md-6 col-lg-3"><div class="info-card"><span class="icon-pill danger"><i class="bi bi-telephone-fill"></i></span><div><h3>Emergency</h3><p><a class="fw-semibold" style="color:var(--hc-danger)" href="tel:{{ HOSPITAL.emergency|cut:' ' }}">{{ HOSPITAL.emergency }}</a><br>24 hours, 7 days</p></div></div></div>
+      <div class="col-md-6 col-lg-3"><div class="info-card"><span class="icon-pill"><i class="bi bi-headset"></i></span><div><h3>Reception</h3><p><a href="tel:{{ HOSPITAL.phone|cut:' ' }}">{{ HOSPITAL.phone }}</a><br>Mon–Sat, 8:00–19:00</p></div></div></div>
+      <div class="col-md-6 col-lg-3"><div class="info-card"><span class="icon-pill accent"><i class="bi bi-envelope"></i></span><div><h3>Email</h3><p><a href="mailto:{{ HOSPITAL.email }}">{{ HOSPITAL.email }}</a><br>Reply within 1 working day</p></div></div></div>
+      <div class="col-md-6 col-lg-3"><div class="info-card"><span class="icon-pill"><i class="bi bi-geo-alt"></i></span><div><h3>Visit us</h3><p>{{ HOSPITAL.address }}</p></div></div></div>
+    </div>
 
-    <link rel="stylesheet" href="{% static 'css/open-iconic-bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/animate.css">
-
-    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
-
-    <link rel="stylesheet" href="{% static 'css/aos.css' %}">
-
-    <link rel="stylesheet" href="{% static 'css/ionicons.min.css' %}">
-
-    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css' %}">
-    <link rel="stylesheet" href="{% static 'css/jquery.timepicker.css' %}">
-
-
-    <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
-    <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  </head>
-  <body>
-
-	  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-	    <div class="container">
-	      <a class="navbar-brand" href="#">HOLY<span>CROSS</span></a>
-	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-	        <span class="oi oi-menu"></span> Menu
-	      </button>
-
-	      <div class="collapse navbar-collapse" id="ftco-nav">
-	        <ul class="navbar-nav ml-auto">
-	          <li class="nav-item"><a href="{% url 'index' %}" class="nav-link">Home</a></li>
-	          <li class="nav-item"><a href="{% url 'aboutus' %}" class="nav-link">About</a></li>
-	          <li class="nav-item"><a href="{% url 'service' %}" class="nav-link">Services</a></li>
-	          <li class="nav-item"><a href="{% url 'blog' %}" class="nav-link">Blog</a></li>
-	          <li class="nav-item active"><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
-	          <li class="nav-item"><a href="{% url 'videocall' %}" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-camera-video" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5zm11.5 5.175 3.5 1.556V4.269l-3.5 1.556v4.35zM2 4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H2z"/>
-</svg></a></li>
-              <li class="nav-item dropdown">
-                    {% if request.session.username %}
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Hi,{{request.session.username}}
-          </a>
-                {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'loginfr' %}">Register/Login</a></li>
-                {% endif %}
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-          </ul>
-        </li>
-	        </ul>
-	      </div>
-	    </div>
-	  </nav>
-    <!-- END nav -->
-
-    <section class="home-slider owl-carousel">
-      <div class="slider-item bread-item" style="background-image: url({% static 'images/bg_1.jpg' %});" data-stellar-background-ratio="0.5">
-        <div class="overlay"></div>
-        <div class="container" data-scrollax-parent="true">
-          <div class="row slider-text align-items-end">
-            <div class="col-md-7 col-sm-12 ftco-animate mb-5">
-              <p class="breadcrumbs" data-scrollax=" properties: { translateY: '70%', opacity: 1.6}"><span class="mr-2"><a href="{% url 'index' %}">Home</a></span> <span>Contact</span></p>
-              <h1 class="mb-3" data-scrollax=" properties: { translateY: '70%', opacity: .9}">Contact Us</h1>
+    <div class="row g-4 align-items-stretch">
+      <div class="col-lg-7">
+        <div class="form-card h-100">
+          <h2 class="h4 mb-1">Send us a message</h2>
+          <p class="text-muted small mb-4">Please don't include sensitive medical details. For urgent help, call our emergency line.</p>
+          <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="row">
+              {% include "partials/field.html" with field=form.Name wrapper="col-md-6 mb-3" %}
+              {% include "partials/field.html" with field=form.Email wrapper="col-md-6 mb-3" %}
+              {% include "partials/field.html" with field=form.Phone wrapper="col-md-6 mb-3" %}
+              {% include "partials/field.html" with field=form.Subject wrapper="col-md-6 mb-3" %}
             </div>
-          </div>
+            {% include "partials/field.html" with field=form.Message %}
+            <button class="btn btn-primary" type="submit"><i class="bi bi-send me-1"></i>Send message</button>
+          </form>
         </div>
       </div>
-    </section>
-
-		<section class="ftco-section contact-section ftco-degree-bg">
-      <div class="container">
-        <div class="row d-flex mb-5 contact-info">
-          <div class="col-md-12 mb-4">
-            <h2 class="h4">Contact Information - {{message_name}}</h2>
-          </div>
-          <div class="w-100"></div>
-          <div class="col-md-3">
-            <p><span>Address:</span> 	Holy Cross Hospital, Kochi, Kerala, India</p>
-          </div>
-          <div class="col-md-3">
-            <p><span>Phone:</span> <a href="tel://1234567920">+91 8590569016</a></p>
-          </div>
-          <div class="col-md-3">
-            <p><span>Email:</span> <a href="mailto:info@yoursite.com">holycross@gmail.com</a></p>
-          </div>
-          <div class="col-md-3">
-            <p><span>Website</span> <a href="{% url 'index' %}">HolyCross.com</a></p>
-          </div>
-        </div>
-        <div class="row block-9">
-          <div class="col-md-6 pr-md-5">
-            <form action="{% url 'contact' %}" method="post">
-              {% csrf_token %}
-              <div class="form-group">
-                <input type="text" name="message_name" class="form-control" placeholder="Your Name">
-              </div>
-              <div class="form-group">
-                <input type="text" name="message_email" class="form-control" placeholder="Your Email">
-              </div>
-              <div class="form-group">
-                <input type="text" name="message_subject" class="form-control" placeholder="Subject">
-              </div>
-              <div class="form-group">
-                <textarea name="umessage" id="" cols="30" rows="7" class="form-control" placeholder="Message"></textarea>
-              </div>
-              <div class="form-group">
-                <input type="submit" value="Send Message" class="btn btn-primary py-3 px-5">
-              </div>
-            </form>
-
-          </div>
-          </div>
-        </div>
+      <div class="col-lg-5">
+        <iframe class="map-frame h-100" title="Map showing {{ HOSPITAL.name }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          src="https://maps.google.com/maps?q={{ HOSPITAL.address|urlencode }}&z=13&output=embed"></iframe>
       </div>
-    </section>
-
-    <footer class="ftco-footer ftco-bg-dark ftco-section">
-      <div class="container">
-        <div class="row mb-5">
-          <div class="col-md-3">
-            <div class="ftco-footer-widget mb-4">
-              <h2 class="ftco-heading-2">HolyCross</h2>
-              <p>Welcome to HolyCross Health Scheduler! Our platform is designed to make managing your healthcare appointments as simple as possible.</p>
-            </div>
-            <ul class="ftco-footer-social list-unstyled float-md-left float-lft ">
-              <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
-              <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
-              <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
-            </ul>
-          </div>
-          <div class="col-md-2">
-            <div class="ftco-footer-widget mb-4 ml-md-5">
-              <h2 class="ftco-heading-2">Quick Links</h2>
-              <ul class="list-unstyled">
-                <li><a href="{% url 'indexpage' %}" class="py-2 d-block">Backend</a></li>
-                <li><a href="{% url 'index' %}" class="py-2 d-block">Home</a></li>
-                <li><a href="{% url 'aboutus' %}" class="py-2 d-block">About</a></li>
-                <li><a href="{% url 'service' %}" class="py-2 d-block">Service</a></li>
-                <li><a href="{% url 'blog' %}" class="py-2 d-block">Blog</a></li>
-                <li><a href="{% url 'contact' %}" class="py-2 d-block">Contact</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-md-4 pr-md-4">
-            <div class="ftco-footer-widget mb-4">
-              <h2 class="ftco-heading-2">Recent Blog</h2>
-              <div class="block-21 mb-4 d-flex">
-                <a class="blog-img mr-4" style="background-image: url({% static 'images/image_1.jpg' %});"></a>
-                <div class="text">
-                  <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about</a></h3>
-                  <div class="meta">
-                    <div><a href="#"><span class="icon-calendar"></span> Sept 15, 2018</a></div>
-                    <div><a href="#"><span class="icon-person"></span> Admin</a></div>
-                    <div><a href="#"><span class="icon-chat"></span> 19</a></div>
-                  </div>
-                </div>
-              </div>
-              <div class="block-21 mb-4 d-flex">
-                <a class="blog-img mr-4" style="background-image: url({% static 'images/image_2.jpg' %});"></a>
-                <div class="text">
-                  <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about</a></h3>
-                  <div class="meta">
-                    <div><a href="#"><span class="icon-calendar"></span> Sept 15, 2018</a></div>
-                    <div><a href="#"><span class="icon-person"></span> Admin</a></div>
-                    <div><a href="#"><span class="icon-chat"></span> 19</a></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="ftco-footer-widget mb-4">
-            	<h2 class="ftco-heading-2">Office</h2>
-            	<div class="block-23 mb-3">
-	              <ul>
-	                <li><span class="icon icon-map-marker"></span><span class="text">Holy Cross Hospital, Kochi, Kerala, India</span></li>
-	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+91 8590569016</span></a></li>
-	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">holycross@gmail.com</span></a></li>
-	              </ul>
-	            </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12 text-center">
-          </div>
-        </div>
-      </div>
-    </footer>
-
-
-
-  <script src="{% static 'js/jquery.min.js' %}"></script>
-  <script src="{% static 'js/jquery-migrate-3.0.1.min.js' %}"></script>
-  <script src="{% static 'js/popper.min.js' %}"></script>
-  <script src="{% static 'js/bootstrap.min.js' %}"></script>
-  <script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
-  <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-  <script src="{% static 'js/jquery.stellar.min.js' %}"></script>
-  <script src="{% static 'js/owl.carousel.min.js' %}"></script>
-  <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
-  <script src="{% static 'js/aos.js' %}"></script>
-  <script src="{% static 'js/jquery.animateNumber.min.js' %}"></script>
-  <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
-  <script src="{% static 'js/jquery.timepicker.min.js' %}"></script>
-  <script src="{% static 'js/scrollax.min.js' %}"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-  <script src="{% static 'js/google-map.js' %}"></script>
-  <script src="{% static 'js/main.js' %}"></script>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-  <script>
-        // Function to display user location details
-        function showUserLocation(position) {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-
-            // Create a map
-            const map = L.map('map').setView([latitude, longitude], 13);
-
-            // Add a tile layer (e.g., OpenStreetMap)
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
-
-            // Add a marker at the user's location
-            const marker = L.marker([latitude, longitude]).addTo(map);
-
-            // Create a geocoder control using the plugin
-            const geocoder = L.Control.Geocoder.opencage('6d0e711d72d74daeb2b0bfd2a5cdfdba');
-
-            // Listen for the map's "load" event to ensure it's fully initialized
-            map.on('load', () => {
-                // Reverse geocode the coordinates to get location details
-                geocoder.reverse(
-                    { lat: latitude, lon: longitude },
-                    map.options.crs.scale(map.getZoom()),
-                    (results) => {
-                        if (results.length > 0) {
-                            const address = results[0].properties;
-                            document.getElementById("city").textContent = address.city;
-                            document.getElementById("name").textContent = address.suburb || "";
-                            document.getElementById("pincode").textContent = address.postcode || "";
-                        }
-                    }
-                );
-            });
-        }
-
-        // Function to handle geolocation errors
-        function showError(error) {
-            console.log("Error fetching location:", error.message);
-        }
-
-        // Function to request and display user location
-        function getUserLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showUserLocation, showError);
-            } else {
-                console.log("Geolocation is not supported by your browser.");
-            }
-        }
-
-        // Call getUserLocation when the page loads
-        window.addEventListener("load", getUserLocation);
-    </script>
-
-  </body>
-</html>
+    </div>
+  </div>
+</section>
+{% endblock %}

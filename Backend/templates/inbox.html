@@ -1,0 +1,26 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Messages{% endblock %}
+{% block heading %}Messages{% endblock %}
+
+{% block content %}
+{% for m in page %}
+<div class="panel mb-3 {% if not m.Read %}border-primary{% endif %}">
+  <div class="d-flex flex-wrap justify-content-between gap-2 mb-2">
+    <div>
+      <div class="fw-bold">{% if not m.Read %}<span class="badge text-bg-primary me-2">New</span>{% endif %}{{ m.Subject }}</div>
+      <div class="small text-muted">{{ m.Name }} · <a href="mailto:{{ m.Email }}?subject=Re: {{ m.Subject|urlencode }}">{{ m.Email }}</a>{% if m.Phone %} · <a href="tel:{{ m.Phone }}">{{ m.Phone }}</a>{% endif %}</div>
+    </div>
+    <div class="small text-muted text-nowrap">{{ m.Created|date:"j M Y, g:i A" }}</div>
+  </div>
+  <p class="mb-3" style="white-space:pre-line">{{ m.Message }}</p>
+  <div class="d-flex gap-2">
+    <a class="btn btn-sm btn-primary" href="mailto:{{ m.Email }}?subject=Re: {{ m.Subject|urlencode }}"><i class="bi bi-reply me-1"></i>Reply</a>
+    <form method="post" action="{% url 'message_action' dataid=m.id %}">{% csrf_token %}<button class="btn btn-sm btn-light-soft" name="action" value="toggle">Mark as {% if m.Read %}unread{% else %}read{% endif %}</button></form>
+    <form method="post" action="{% url 'message_action' dataid=m.id %}" data-confirm="Delete this message?">{% csrf_token %}<button class="btn btn-sm btn-link text-danger" name="action" value="delete">Delete</button></form>
+  </div>
+</div>
+{% empty %}
+<div class="panel"><div class="empty-state"><i class="bi bi-inbox"></i><p class="mt-2 mb-0">No messages yet. Enquiries from the contact page will appear here.</p></div></div>
+{% endfor %}
+<div class="panel p-0 border-0 bg-transparent">{% include "partials/pagination.html" %}</div>
+{% endblock %}

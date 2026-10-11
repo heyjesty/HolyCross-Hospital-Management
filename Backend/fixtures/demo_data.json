@@ -1,0 +1,410 @@
+[
+  {
+    "model": "Backend.deptdb",
+    "pk": 29,
+    "fields": {
+      "DeptName": "Allergist and Clinical Immunologist",
+      "Description": "An allergist is a doctor who diagnoses and treats allergies, asthma, and immunologic conditions. They have two to three years of special training in allergy and immunology.",
+      "Image": "images/allergy.webp"
+    }
+  },
+  {
+    "model": "Backend.deptdb",
+    "pk": 30,
+    "fields": {
+      "DeptName": "Cardiology",
+      "Description": "Cardiology is a branch of medicine that deals with disorders of the heart and blood vessels. It focuses on the diagnosis and treatment of coronary artery disease, congenital heart defects, heart failure, electrophysiology, and valvular heart disease",
+      "Image": "images/cardiology.webp"
+    }
+  },
+  {
+    "model": "Backend.deptdb",
+    "pk": 31,
+    "fields": {
+      "DeptName": "Vascular and Endovascular Surgeons",
+      "Description": "Vascular and endovascular surgery is a medical speciality that deals with the treatment of conditions affecting blood vessels including arteries, veins and lymphatic vessels.",
+      "Image": "images/cardiology_and_vascular_surgery.webp"
+    }
+  },
+  {
+    "model": "Backend.deptdb",
+    "pk": 32,
+    "fields": {
+      "DeptName": "Covid consultation",
+      "Description": "COVID-19 consultation is an online consultation service provided for COVID-19 patients. It enables people to consult doctors online and receive medical advice about their symptoms.",
+      "Image": "images/covid_consultation.webp"
+    }
+  },
+  {
+    "model": "Backend.deptdb",
+    "pk": 33,
+    "fields": {
+      "DeptName": "Dental Aligners",
+      "Description": "Clear aligner therapy straightens teeth discreetly with custom, removable trays — planned digitally and reviewed regularly by our orthodontic team.",
+      "Image": "images/dental_alianer.webp"
+    }
+  },
+  {
+    "model": "Backend.deptdb",
+    "pk": 34,
+    "fields": {
+      "DeptName": "Dental Care",
+      "Description": "Dentists are specialised professionals who help detect, treat, and prevent oral or dental health issues. Visiting a dentist can help maintain good dental health and oral hygiene that directly impacts your overall well-being.",
+      "Image": "images/dentist.webp"
+    }
+  },
+  {
+    "model": "Backend.deptdb",
+    "pk": 35,
+    "fields": {
+      "DeptName": "Diabetologist",
+      "Description": "Diabetology is a field of medicine that focuses on the study, diagnosis, and management of diabetes mellitus. Diabetes mellitus, commonly referred to as diabetes, is a chronic medical condition characterised by high blood sugar levels.",
+      "Image": "images/ic_diabetology.webp"
+    }
+  },
+  {
+    "model": "Backend.deptdb",
+    "pk": 36,
+    "fields": {
+      "DeptName": "Family Doctors",
+      "Description": "Family physicians are medical doctors who provide care to people of all age groups and gender. They specialise in diagnosing chronic conditions, checking for signs or symptoms, providing preventative care, and referring people to specialists, if needed.",
+      "Image": "images/ic_familyPhysician.webp"
+    }
+  },
+  {
+    "model": "Backend.deptdb",
+    "pk": 37,
+    "fields": {
+      "DeptName": "Gastroenterologists",
+      "Description": "A gastroenterologist is a medical doctor who specialises in the detection and treatment of disorders related to the liver and gastrointestinal tract. Gastroenterologists do a  procedure called colonoscopies to look inside the colon.",
+      "Image": "images/ic_gastroenterology.webp"
+    }
+  },
+  {
+    "model": "Backend.deptdb",
+    "pk": 38,
+    "fields": {
+      "DeptName": "Nephrology",
+      "Description": "Nephrology is a medical speciality that focuses on the study, diagnosis, and treatment of kidney-related diseases. It is an essential field in the medical industry as the kidneys play a critical role in maintaining overall health.",
+      "Image": "images/ic_nephrology.webp"
+    }
+  },
+  {
+    "model": "Backend.deptdb",
+    "pk": 39,
+    "fields": {
+      "DeptName": "Neurology",
+      "Description": "A neurologist is a medical doctor who specialises in detecting, treating, and monitoring brain and nervous system disorders such as stroke, epilepsy and migraine.",
+      "Image": "images/ic_neurology.webp"
+    }
+  },
+  {
+    "model": "Backend.deptdb",
+    "pk": 40,
+    "fields": {
+      "DeptName": "Orthopedics",
+      "Description": "Orthopaedics is a medical speciality that focuses on the prevention, diagnosis, and treatment of disorders of the musculoskeletal system. The musculoskeletal system includes bones, joints, muscles, ligaments, tendons, and nerves, which work together to provide support, stability, and movement to the body. Orthopaedics also involves the rehabilitation of patients who have undergone orthopaedic surgeries or have suffered from musculoskeletal injuries.",
+      "Image": "images/ic_orthopaedics.webp"
+    }
+  },
+  {
+    "model": "Backend.doctordb",
+    "pk": 3,
+    "fields": {
+      "Name": "Dr. Suresh G",
+      "Department": "Allergist and Clinical Immunologist",
+      "Experience": "25 Years",
+      "Education": "MBBS, MD",
+      "Registrations": "1001",
+      "Timing": "MORNING",
+      "Language": "English, Hindi, Malayalam, Telugu, Kannada",
+      "About": "Dr. Suresh G is a consultant in Allergist and Clinical Immunologist at HolyCross Hospital with 25 years of clinical experience. Holding MBBS, MD, Suresh focuses on allergy testing, asthma and immune disorders, and believes in explaining every diagnosis and treatment option clearly so patients can make confident decisions.",
+      "Gender": "MALE",
+      "Image": "dr-img/dr-suresh-g.webp"
+    }
+  },
+  {
+    "model": "Backend.doctordb",
+    "pk": 4,
+    "fields": {
+      "Name": "Dr. Arun Kumar",
+      "Department": "Allergist and Clinical Immunologist",
+      "Experience": "3 Years",
+      "Education": "MBBS",
+      "Registrations": "1002",
+      "Timing": "AFTERNOON",
+      "Language": "English, Tamil, Malayalam",
+      "About": "Dr. Arun Kumar is a consultant in Allergist and Clinical Immunologist at HolyCross Hospital with 3 years of clinical experience. Holding MBBS, Arun focuses on allergy testing, asthma and immune disorders, and believes in explaining every diagnosis and treatment option clearly so patients can make confident decisions.",
+      "Gender": "MALE",
+      "Image": "dr-img/d1_copy.png"
+    }
+  },
+  {
+    "model": "Backend.doctordb",
+    "pk": 5,
+    "fields": {
+      "Name": "Dr. Sagar",
+      "Department": "Allergist and Clinical Immunologist",
+      "Experience": "5 Years",
+      "Education": "MBBS, MD",
+      "Registrations": "1003",
+      "Timing": "EVENING",
+      "Language": "English, Tamil, Malayalam",
+      "About": "Dr. Sagar is a consultant in Allergist and Clinical Immunologist at HolyCross Hospital with 5 years of clinical experience. Holding MBBS, MD, Sagar focuses on allergy testing, asthma and immune disorders, and believes in explaining every diagnosis and treatment option clearly so patients can make confident decisions.",
+      "Gender": "MALE",
+      "Image": "dr-img/portrait-experienced-professional-therapist-with-stethoscope-looking-camera.jpg"
+    }
+  },
+  {
+    "model": "Backend.doctordb",
+    "pk": 6,
+    "fields": {
+      "Name": "Dr. Veena",
+      "Department": "Cardiology",
+      "Experience": "25 Years",
+      "Education": "MBBS, MD",
+      "Registrations": "1004",
+      "Timing": "MORNING",
+      "Language": "English, Hindi, Malayalam, Telugu, Kannada",
+      "About": "Dr. Veena is a consultant in Cardiology at HolyCross Hospital with 25 years of clinical experience. Holding MBBS, MD, Veena focuses on heart disease prevention, ECG/echo interpretation and long-term cardiac care, and believes in explaining every diagnosis and treatment option clearly so patients can make confident decisions.",
+      "Gender": "FEMALE",
+      "Image": "dr-img/gg.jpg"
+    }
+  },
+  {
+    "model": "Backend.doctordb",
+    "pk": 7,
+    "fields": {
+      "Name": "Dr. Sindu G",
+      "Department": "Cardiology",
+      "Experience": "7 Years",
+      "Education": "MBBS",
+      "Registrations": "1005",
+      "Timing": "AFTERNOON",
+      "Language": "English",
+      "About": "Dr. Sindu G is a consultant in Cardiology at HolyCross Hospital with 7 years of clinical experience. Holding MBBS, Sindu focuses on heart disease prevention, ECG/echo interpretation and long-term cardiac care, and believes in explaining every diagnosis and treatment option clearly so patients can make confident decisions.",
+      "Gender": "FEMALE",
+      "Image": "dr-img/pexels-antoni-shkraba-5215017.jpg"
+    }
+  },
+  {
+    "model": "Backend.doctordb",
+    "pk": 8,
+    "fields": {
+      "Name": "Dr. Rahul Sree",
+      "Department": "Cardiology",
+      "Experience": "25 Years",
+      "Education": "MBBS, MD",
+      "Registrations": "1006",
+      "Timing": "EVENING",
+      "Language": "English, Tamil, Malayalam",
+      "About": "Dr. Rahul Sree is a consultant in Cardiology at HolyCross Hospital with 25 years of clinical experience. Holding MBBS, MD, Rahul focuses on heart disease prevention, ECG/echo interpretation and long-term cardiac care, and believes in explaining every diagnosis and treatment option clearly so patients can make confident decisions.",
+      "Gender": "MALE",
+      "Image": "dr-img/pexels-tima-miroshnichenko-5452268_mT5ZN3G.jpg"
+    }
+  },
+  {
+    "model": "Backend.doctordb",
+    "pk": 9,
+    "fields": {
+      "Name": "Dr. Albin Kuri",
+      "Department": "Vascular and Endovascular Surgeons",
+      "Experience": "25 Years",
+      "Education": "MBBS, MD",
+      "Registrations": "1007",
+      "Timing": "MORNING",
+      "Language": "English, Hindi, Malayalam, Telugu, Kannada",
+      "About": "Dr. Albin Kuri is a consultant in Vascular and Endovascular Surgeons at HolyCross Hospital with 25 years of clinical experience. Holding MBBS, MD, Albin focuses on varicose veins, peripheral artery disease and minimally invasive vascular procedures, and believes in explaining every diagnosis and treatment option clearly so patients can make confident decisions.",
+      "Gender": "MALE",
+      "Image": "dr-img/pexels-gustavo-fring-4173239.jpg"
+    }
+  },
+  {
+    "model": "Backend.doctordb",
+    "pk": 10,
+    "fields": {
+      "Name": "Dr. Vanitha",
+      "Department": "Vascular and Endovascular Surgeons",
+      "Experience": "3 Years",
+      "Education": "MBBS, MD",
+      "Registrations": "1008",
+      "Timing": "AFTERNOON",
+      "Language": "English, Hindi, Malayalam, Telugu, Kannada",
+      "About": "Dr. Vanitha is a consultant in Vascular and Endovascular Surgeons at HolyCross Hospital with 3 years of clinical experience. Holding MBBS, MD, Vanitha focuses on varicose veins, peripheral artery disease and minimally invasive vascular procedures, and believes in explaining every diagnosis and treatment option clearly so patients can make confident decisions.",
+      "Gender": "FEMALE",
+      "Image": "dr-img/pexels-antoni-shkraba-6749777.jpg"
+    }
+  },
+  {
+    "model": "Backend.doctordb",
+    "pk": 11,
+    "fields": {
+      "Name": "Dr. Vineetha",
+      "Department": "Vascular and Endovascular Surgeons",
+      "Experience": "9 Years",
+      "Education": "MBBS, MD",
+      "Registrations": "1009",
+      "Timing": "EVENING",
+      "Language": "Malayalam",
+      "About": "Dr. Vineetha is a consultant in Vascular and Endovascular Surgeons at HolyCross Hospital with 9 years of clinical experience. Holding MBBS, MD, Vineetha focuses on varicose veins, peripheral artery disease and minimally invasive vascular procedures, and believes in explaining every diagnosis and treatment option clearly so patients can make confident decisions.",
+      "Gender": "FEMALE",
+      "Image": "dr-img/pexels-thirdman-5327580.jpg"
+    }
+  },
+  {
+    "model": "Backend.doctordb",
+    "pk": 12,
+    "fields": {
+      "Name": "Dr. Anchal Dev",
+      "Department": "Covid consultation",
+      "Experience": "3 Years",
+      "Education": "MBBS, MD",
+      "Registrations": "1010",
+      "Timing": "MORNING",
+      "Language": "English",
+      "About": "Dr. Anchal Dev is a consultant in Covid consultation at HolyCross Hospital with 3 years of clinical experience. Holding MBBS, MD, Anchal focuses on respiratory infections, post-COVID recovery and teleconsultations, and believes in explaining every diagnosis and treatment option clearly so patients can make confident decisions.",
+      "Gender": "MALE",
+      "Image": "dr-img/pexels-jrfotosgrand-fotografia-12660379.jpg"
+    }
+  },
+  {
+    "model": "Backend.doctordb",
+    "pk": 13,
+    "fields": {
+      "Name": "Dr. Meena",
+      "Department": "Covid consultation",
+      "Experience": "25 Years",
+      "Education": "MBBS, MD",
+      "Registrations": "1011",
+      "Timing": "AFTERNOON",
+      "Language": "English, Tamil, Malayalam",
+      "About": "Dr. Meena is a consultant in Covid consultation at HolyCross Hospital with 25 years of clinical experience. Holding MBBS, MD, Meena focuses on respiratory infections, post-COVID recovery and teleconsultations, and believes in explaining every diagnosis and treatment option clearly so patients can make confident decisions.",
+      "Gender": "FEMALE",
+      "Image": "dr-img/pexels-tran-nhu-tuan-14438787.jpg"
+    }
+  },
+  {
+    "model": "Backend.doctordb",
+    "pk": 14,
+    "fields": {
+      "Name": "Dr. Amritha",
+      "Department": "Covid consultation",
+      "Experience": "7 Years",
+      "Education": "MBBS, MD",
+      "Registrations": "1012",
+      "Timing": "EVENING",
+      "Language": "English, Hindi, Malayalam, Telugu, Kannada",
+      "About": "Dr. Amritha is a consultant in Covid consultation at HolyCross Hospital with 7 years of clinical experience. Holding MBBS, MD, Amritha focuses on respiratory infections, post-COVID recovery and teleconsultations, and believes in explaining every diagnosis and treatment option clearly so patients can make confident decisions.",
+      "Gender": "FEMALE",
+      "Image": "dr-img/pexels-cottonbro-studio-5722166.jpg"
+    }
+  },
+  {
+    "model": "Backend.doctordb",
+    "pk": 15,
+    "fields": {
+      "Name": "Dr. Devu",
+      "Department": "Dental Aligners",
+      "Experience": "3 Years",
+      "Education": "MBBS, MD",
+      "Registrations": "1013",
+      "Timing": "MORNING",
+      "Language": "English, Hindi, Malayalam, Telugu, Kannada",
+      "About": "Dr. Devu is a consultant in Dental Aligners at HolyCross Hospital with 3 years of clinical experience. Holding MBBS, MD, Devu focuses on clear aligner therapy and orthodontic planning, and believes in explaining every diagnosis and treatment option clearly so patients can make confident decisions.",
+      "Gender": "FEMALE",
+      "Image": "dr-img/pexels-tima-miroshnichenko-8376309.jpg"
+    }
+  },
+  {
+    "model": "Backend.doctordb",
+    "pk": 16,
+    "fields": {
+      "Name": "Dr. Anikha",
+      "Department": "Dental Aligners",
+      "Experience": "7 Years",
+      "Education": "MBBS",
+      "Registrations": "1014",
+      "Timing": "AFTERNOON",
+      "Language": "English, Tamil, Malayalam",
+      "About": "Dr. Anikha is a consultant in Dental Aligners at HolyCross Hospital with 7 years of clinical experience. Holding MBBS, Anikha focuses on clear aligner therapy and orthodontic planning, and believes in explaining every diagnosis and treatment option clearly so patients can make confident decisions.",
+      "Gender": "FEMALE",
+      "Image": "dr-img/pexels-tima-miroshnichenko-5407253.jpg"
+    }
+  },
+  {
+    "model": "Backend.doctordb",
+    "pk": 17,
+    "fields": {
+      "Name": "Dr. Namitha",
+      "Department": "Dental Aligners",
+      "Experience": "5 Years",
+      "Education": "MBBS, MD",
+      "Registrations": "1015",
+      "Timing": "EVENING",
+      "Language": "English, Hindi, Malayalam, Telugu, Kannada",
+      "About": "Dr. Namitha is a consultant in Dental Aligners at HolyCross Hospital with 5 years of clinical experience. Holding MBBS, MD, Namitha focuses on clear aligner therapy and orthodontic planning, and believes in explaining every diagnosis and treatment option clearly so patients can make confident decisions.",
+      "Gender": "FEMALE",
+      "Image": "dr-img/pexels-pavel-danilyuk-5998474.jpg"
+    }
+  },
+  {
+    "model": "Backend.doctordb",
+    "pk": 18,
+    "fields": {
+      "Name": "Dr. Sandra",
+      "Department": "Dental Care",
+      "Experience": "25 Years",
+      "Education": "MBBS",
+      "Registrations": "1016",
+      "Timing": "MORNING",
+      "Language": "English, Hindi, Malayalam, Telugu, Kannada",
+      "About": "Dr. Sandra is a consultant in Dental Care at HolyCross Hospital with 25 years of clinical experience. Holding MBBS, Sandra focuses on preventive dentistry, restorations and oral hygiene, and believes in explaining every diagnosis and treatment option clearly so patients can make confident decisions.",
+      "Gender": "FEMALE",
+      "Image": "dr-img/pexels-karolina-grabowska-5206931.jpg"
+    }
+  },
+  {
+    "model": "Frontend.blogdb",
+    "pk": 7,
+    "fields": {
+      "Name": "Jestin G Johnson",
+      "Email": "",
+      "Subject": "Why Experience Matters",
+      "Message": "When it comes to your health, experience is invaluable. Our team of medical professionals brings a wealth of knowledge and expertise to the table. Whether you're seeking routine check-ups, specialized consultations, or urgent care, you can trust that our doctors have seen it all. Their years of practice have honed their skills and instincts, making them well-equipped to provide you with the best care possible.",
+      "Approved": true
+    }
+  },
+  {
+    "model": "Frontend.blogdb",
+    "pk": 8,
+    "fields": {
+      "Name": "Rahul",
+      "Email": "",
+      "Subject": "Meet the Experts",
+      "Message": "On the HolyCross platform, we proudly feature profiles of our experienced doctors, allowing you to get to know them before you book an appointment. You'll find information about their educational background, specialties, and areas of expertise. We believe that transparency is key to building trust, and we want you to feel confident in the healthcare decisions you make.",
+      "Approved": true
+    }
+  },
+  {
+    "model": "Frontend.blogdb",
+    "pk": 9,
+    "fields": {
+      "Name": "Shijo",
+      "Email": "",
+      "Subject": "Your Health, Your Choice",
+      "Message": "With HolyCross, you're in control of your healthcare journey. We provide you with the tools and information you need to make informed decisions about your well-being. Whether you're looking for a primary care physician, a specialist, or an urgent care provider, our platform is designed to cater to your unique needs.",
+      "Approved": true
+    }
+  },
+  {
+    "model": "Frontend.blogdb",
+    "pk": 10,
+    "fields": {
+      "Name": "Arun",
+      "Email": "",
+      "Subject": "A Seamless Booking Experience",
+      "Message": "Our commitment to simplifying healthcare extends to the booking process itself. With just a few clicks, you can schedule an appointment with the doctor of your choice at a time that suits your schedule. No more waiting on hold or dealing with long hold times – we've streamlined the process to save you time and stress.",
+      "Approved": true
+    }
+  }
+]

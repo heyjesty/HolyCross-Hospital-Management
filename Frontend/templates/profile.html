@@ -1,347 +1,79 @@
-<!DOCTYPE html>
-{%load static%}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-<title>HolyCross hospital Management</title>
+{% extends "base.html" %}
+{% block title %}My account — {{ HOSPITAL.name }}{% endblock %}
 
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700" rel="stylesheet">
-      <link rel="icon" href="{% static 'assets/images/vejq5m3sm4396c01m3etnnp4r8.png' %}" type="image/x-icon">
+{% block content %}
+{% include "partials/page_header.html" with heading="My account" subheading="Your details and appointments in one place." %}
 
-    <link rel="stylesheet" href="{% static 'css/open-iconic-bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
-
-    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
-
-    <link rel="stylesheet" href="{% static 'css/aos.css' %}">
-
-    <link rel="stylesheet" href="{% static 'css/ionicons.min.css' %}">
-
-    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css' %}">
-    <link rel="stylesheet" href="{% static 'css/jquery.timepicker.css' %}">
-
-
-    <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
-    <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<!------ Include the above in your HEAD tag ---------->
-<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-	    <div class="container">
-	      <a class="navbar-brand" href="index.html">HOLY<span>CROSS</span></a>
-	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-	        <span class="oi oi-menu"></span> Menu
-	      </button>
-
-	      <div class="collapse navbar-collapse" id="ftco-nav">
-	        <ul class="navbar-nav ml-auto">
-	          <li class="nav-item"><a href="{% url 'index' %}" class="nav-link">Home</a></li>
-	          <li class="nav-item active"><a href="{% url 'aboutus' %}" class="nav-link">About</a></li>
-	          <li class="nav-item"><a href="{% url 'service' %}" class="nav-link">Services</a></li>
-	          <li class="nav-item"><a href="{% url 'blog' %}" class="nav-link">Blog</a></li>
-	          <li class="nav-item"><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
-	         <li class="nav-item dropdown">
-                    {% if request.session.username %}
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Hi,{{request.session.username}}
-          </a>
-                {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'loginfr' %}">Register/Login</a></li>
-                {% endif %}
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+<section class="section pt-5">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="form-card text-center">
+          {% if profile.Image %}
+            <img src="{{ profile.Image.url }}" alt="" class="rounded-circle mb-3" style="width:112px;height:112px;object-fit:cover">
+          {% else %}
+            <span class="avatar mb-3" style="width:112px;height:112px;font-size:2.6rem">{{ user.username|first|upper }}</span>
+          {% endif %}
+          <h2 class="h5 mb-0">{{ profile.Name|default:user.get_full_name|default:user.username }}</h2>
+          <p class="text-muted small">@{{ user.username }}</p>
+          <ul class="facts-list text-start mt-3">
+            <li><i class="bi bi-envelope"></i><div><small>Email</small>{{ profile.Email|default:user.email|default:"—" }}</div></li>
+            <li><i class="bi bi-telephone"></i><div><small>Phone</small>{{ profile.Phone|default:"—" }}</div></li>
+            <li><i class="bi bi-gender-ambiguous"></i><div><small>Gender</small>{{ profile.Gender|default:"—" }}</div></li>
+            <li><i class="bi bi-cake2"></i><div><small>Date of birth</small>{{ profile.Birthday|date:"j M Y"|default:"—" }}</div></li>
+            <li><i class="bi bi-geo-alt"></i><div><small>Location</small>{{ profile.Location|default:"—" }}</div></li>
           </ul>
-        </li>
-	        </ul>
-	      </div>
-	    </div>
-	  </nav>
-    <!-- END nav -->
-<div class="container emp-profile">
-            <form method="post">
-                {% csrf_token %}
-                <div class="row">
-                    <div class="col-md-4">
-                        {% for i in dt %}
-                        <div class="profile-img">
-                            <div class="staff">
-      				<div class="img mb-4" style="background-image: url({{i.Image.url}});"></div>
-      				<div class="info text-center">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="profile-head">
-                                    <h5>
-                                        {{i.Name}}
-                                    </h5>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                            <button type="submit" class="btn btn-outline-primary"><a style="text-decoration:none; color:black;" href="{% url 'proedit' dataid=i.id %}">Edit Profile</a></button>
-                    </div>
-                </div>
-                    <div class="col-md-8">
-                        <div class="tab-content profile-tab" id="myTabContent">
-                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Username</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>{{i.Username}}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Name</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>{{i.Name}}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Email</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>{{i.Email}}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Phone</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>{{i.Phone}}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Gender</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>{{i.Gender}}</p>
-                                            </div>
-                                        </div>
-                                <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Birthday</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>{{i.Birthday}}</p>
-                                            </div>
-                                        </div>
-                                <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Location</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>{{i.Location}}</p>
-                                            </div>
-                                        </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
- <footer class="ftco-footer ftco-bg-dark ftco-section">
-      <div class="container">
-        <div class="row mb-5">
-          <div class="col-md-3">
-            <div class="ftco-footer-widget mb-4">
-              <h2 class="ftco-heading-2">DentaCare</h2>
-              <p>Welcome to HolyCross Health Scheduler! Our platform is designed to make managing your healthcare appointments as simple as possible.</p>
-            </div>
-            <ul class="ftco-footer-social list-unstyled float-md-left float-lft ">
-              <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
-              <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
-              <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
-            </ul>
-          </div>
-          <div class="col-md-2">
-            <div class="ftco-footer-widget mb-4 ml-md-5">
-              <h2 class="ftco-heading-2">Quick Links</h2>
-              <ul class="list-unstyled">
-                <li><a href="{% url 'indexpage' %}" class="py-2 d-block">Backend</a></li>
-                <li><a href="{% url 'index' %}" class="py-2 d-block">Home</a></li>
-                <li><a href="{% url 'aboutus' %}" class="py-2 d-block">About</a></li>
-                <li><a href="{% url 'service' %}" class="py-2 d-block">Service</a></li>
-                <li><a href="{% url 'blog' %}" class="py-2 d-block">Blog</a></li>
-                <li><a href="{% url 'contact' %}" class="py-2 d-block">Contact</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-md-4 pr-md-4">
-            <div class="ftco-footer-widget mb-4">
-              <h2 class="ftco-heading-2">Recent Blog</h2>
-              <div class="block-21 mb-4 d-flex">
-                <a class="blog-img mr-4" style="background-image: url({% static 'images/image_1.jpg' %});"></a>
-                <div class="text">
-                  <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about</a></h3>
-                  <div class="meta">
-                    <div><a href="#"><span class="icon-calendar"></span> Sept 15, 2018</a></div>
-                    <div><a href="#"><span class="icon-person"></span> Admin</a></div>
-                    <div><a href="#"><span class="icon-chat"></span> 19</a></div>
-                  </div>
-                </div>
-              </div>
-              <div class="block-21 mb-4 d-flex">
-                <a class="blog-img mr-4" style="background-image: url({% static 'images/image_2.jpg' %});"></a>
-                <div class="text">
-                  <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about</a></h3>
-                  <div class="meta">
-                    <div><a href="#"><span class="icon-calendar"></span> Sept 15, 2018</a></div>
-                    <div><a href="#"><span class="icon-person"></span> Admin</a></div>
-                    <div><a href="#"><span class="icon-chat"></span> 19</a></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="ftco-footer-widget mb-4">
-            	<h2 class="ftco-heading-2">Office</h2>
-            	<div class="block-23 mb-3">
-	              <ul>
-	                <li><span class="icon icon-map-marker"></span><span class="text">Holy Cross Hospital, Kochi, Kerala, India</span></li>
-	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+91 8590569016</span></a></li>
-	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">holycross@gmail.com</span></a></li>
-	              </ul>
-	            </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12 text-center">
-          </div>
+          <a href="{% url 'profileedit' %}" class="btn btn-outline-primary w-100 mt-3"><i class="bi bi-pencil me-1"></i>Edit profile</a>
         </div>
       </div>
-    </footer>
 
-<style>
-<!--    body{-->
-<!--    background: -webkit-linear-gradient(left, #3931af, #00c6ff);-->
-<!--}-->
-.emp-profile{
-    padding: 3%;
-    margin-top: 3%;
-    margin-bottom: 3%;
-    border-radius: 0.5rem;
-    background: #fff;
-}
-.profile-img{
-    text-align: center;
-}
-.profile-img img{
-    width: 70%;
-    height: 100%;
-}
-.profile-img .file {
-    position: relative;
-    overflow: hidden;
-    margin-top: -20%;
-    width: 70%;
-    border: none;
-    border-radius: 0;
-    font-size: 15px;
-    background: #212529b8;
-}
-.profile-img .file input {
-    position: absolute;
-    opacity: 0;
-    right: 0;
-    top: 0;
-}
-.profile-head h5{
-    color: #333;
-}
-.profile-head h6{
-    color: #0062cc;
-}
-.profile-edit-btn{
-    border: none;
-    border-radius: 1.5rem;
-    width: 70%;
-    padding: 2%;
-    font-weight: 600;
-    color: #6c757d;
-    cursor: pointer;
-}
-.proile-rating{
-    font-size: 12px;
-    color: #818182;
-    margin-top: 5%;
-}
-.proile-rating span{
-    color: #495057;
-    font-size: 15px;
-    font-weight: 600;
-}
-.profile-head .nav-tabs{
-    margin-bottom:5%;
-}
-.profile-head .nav-tabs .nav-link{
-    font-weight:600;
-    border: none;
-}
-.profile-head .nav-tabs .nav-link.active{
-    border: none;
-    border-bottom:2px solid #0062cc;
-}
-.profile-work{
-    padding: 14%;
-    margin-top: -15%;
-}
-.profile-work p{
-    font-size: 12px;
-    color: #818182;
-    font-weight: 600;
-    margin-top: 10%;
-}
-.profile-work a{
-    text-decoration: none;
-    color: #495057;
-    font-weight: 600;
-    font-size: 14px;
-}
-.profile-work ul{
-    list-style: none;
-}
-.profile-tab label{
-    font-weight: 600;
-}
-.profile-tab p{
-    font-weight: 600;
-    color: #0062cc;
-}
-</style>
- <script src="{% static 'js/jquery.min.js' %}"></script>
-  <script src="{% static 'js/jquery-migrate-3.0.1.min.js' %}"></script>
-  <script src="{% static 'js/popper.min.js' %}"></script>
-  <script src="{% static 'js/bootstrap.min.js' %}"></script>
-  <script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
-  <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-  <script src="{% static 'js/jquery.stellar.min.js' %}"></script>
-  <script src="{% static 'js/owl.carousel.min.js' %}"></script>
-  <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
-  <script src="{% static 'js/aos.js' %}"></script>
-  <script src="{% static 'js/jquery.animateNumber.min.js' %}"></script>
-  <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
-  <script src="{% static 'js/jquery.timepicker.min.js' %}"></script>
-  <script src="{% static 'js/scrollax.min.js' %}"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-  <script src="{% static 'js/google-map.js' %}"></script>
-  <script src="{% static 'js/main.js' %}"></script>
-</body>
-</html>
+      <div class="col-lg-8" id="appointments">
+        <div class="form-card">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h5 mb-0">Upcoming appointments</h2>
+            <a href="{% url 'doctor_list' %}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg me-1"></i>New booking</a>
+          </div>
+          {% for a in upcoming %}
+            <div class="appt flex-wrap">
+              <div class="date-tile"><span>{{ a.Date|date:"M" }}</span><strong>{{ a.Date|date:"j" }}</strong></div>
+              <div class="flex-grow-1">
+                <div class="fw-semibold">{{ a.DrName }}</div>
+                <div class="small text-muted">{{ a.Department }} · {{ a.Date|date:"D" }} {{ a.Time|time:"g:i A" }} · {{ a.reference }}</div>
+              </div>
+              <span class="status status-{{ a.Status }}">{{ a.get_Status_display }}</span>
+              <div class="d-flex gap-1">
+                <a class="btn btn-sm btn-light-soft" href="{% url 'appointment_detail' pk=a.pk %}">Details</a>
+                <form method="post" action="{% url 'appointment_cancel' pk=a.pk %}" data-confirm="Cancel this appointment?">{% csrf_token %}<button class="btn btn-sm btn-link text-danger" type="submit">Cancel</button></form>
+              </div>
+            </div>
+          {% empty %}
+            <div class="empty-state py-4"><i class="bi bi-calendar-x"></i><p class="mt-2 mb-3">You have no upcoming appointments.</p><a href="{% url 'doctor_list' %}" class="btn btn-primary btn-sm">Find a doctor</a></div>
+          {% endfor %}
+        </div>
+
+        {% if past %}
+        <div class="form-card mt-4">
+          <h2 class="h5 mb-4">History</h2>
+          <div class="table-responsive">
+            <table class="table align-middle mb-0">
+              <thead><tr class="small text-muted"><th>Ref.</th><th>Doctor</th><th>Date</th><th>Status</th><th></th></tr></thead>
+              <tbody>
+              {% for a in past %}
+                <tr>
+                  <td class="small">{{ a.reference }}</td>
+                  <td><div class="fw-semibold">{{ a.DrName }}</div><div class="small text-muted">{{ a.Department }}</div></td>
+                  <td class="small">{{ a.Date|date:"j M Y" }}<br>{{ a.Time|time:"g:i A" }}</td>
+                  <td><span class="status status-{{ a.Status }}">{{ a.get_Status_display }}</span></td>
+                  <td class="text-end"><a class="small" href="{% url 'appointment_detail' pk=a.pk %}">View</a></td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

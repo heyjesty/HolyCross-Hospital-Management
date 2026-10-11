@@ -1,16 +1,20 @@
 """
-WSGI config for HospitalManagement project.
+WSGI config for the HospitalManagement project.
 
-It exposes the WSGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/4.2/howto/deployment/wsgi/
+Vercel's Python runtime imports this module and serves the ``app`` callable.
 """
 
 import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'HospitalManagement.settings')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "HospitalManagement.settings")
 
 application = get_wsgi_application()
+
+if os.environ.get("VERCEL"):
+    from HospitalManagement.bootstrap import prepare_database
+
+    prepare_database()
+
+app = application

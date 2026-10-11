@@ -1,274 +1,302 @@
-from django.core.files.storage import FileSystemStorage
-from django.http import HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
-from django.utils.datastructures import MultiValueDictKeyError
+import logging
+from datetime import date as date_cls
+from pathlib import Path
 
-from Backend.models import Deptdb
-from Backend.models import Doctordb
-from Frontend.models import Appoinmentdb, Registerdb, Blogdb, Profiledb, Appointmentdb
-from .forms import DoctorSearchForm
-from django.contrib import messages
 from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import login as auth_login, logout as auth_logout
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import SuspiciousFileOperation
 from django.core.mail import send_mail
+from django.db.models import Count, Q
+from django.http import Http404, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
-from io import BytesIO
-from django.template.loader import get_template
-from django.views import View
+from django.urls import reverse
+from django.utils._os import safe_join
+from django.utils.http import url_has_allowed_host_and_scheme
+from django.views.decorators.cache import cache_control
+from django.views.decorators.http import require_POST
+from django.views.static import serve
+
+from Backend.models import Deptdb, Doctordb
+from Frontend.forms import (AppointmentForm, ContactForm, LoginForm, ProfileForm, RegisterForm,
+                            StoryForm)
+from Frontend.models import Appointmentdb, Blogdb, Profiledb
+
+logger = logging.getLogger(__name__)
 
 
+def _approved_stories():
+    return Blogdb.objects.filter(Approved=True)
 
-# Create your views here.
+
+def _departments_with_counts():
+    counts = dict(Doctordb.objects.values_list("Department").annotate(total=Count("id")))
+    departments = list(Deptdb.objects.all())
+    for dept in departments:
+        dept.doctor_count = counts.get(dept.DeptName, 0)
+    return departments
+
+
 def index(request):
-    data = Deptdb.objects.all()
-    dr = Doctordb.objects.all()
-    bl = Blogdb.objects.all()
-    if request.method == 'GET':
-        form = DoctorSearchForm(request.GET)
-        doctors = []
-
-        if form.is_valid():
-            search_query = form.cleaned_data['search_query']
-            if search_query:
-                doctors = Deptdb.objects.filter(
-                    DeptName=search_query)
-        return render(request, 'index.html', {'form': form, 'data': data, 'doctors': doctors, 'dr': dr, 'bl': bl})
+    departments = _departments_with_counts()
+    featured = [d for d in departments if d.doctor_count][:8] or departments[:8]
+    return render(request, "index.html", {
+        "departments": departments,
+        "featured_departments": featured,
+        "doctors": Doctordb.objects.all()[:4],
+        "stories": _approved_stories()[:6],
+        "doctor_total": Doctordb.objects.count(),
+        "department_total": len(departments),
+    })
 
 
 def aboutus(request):
-    bl = Blogdb.objects.all()
-    return render(request, 'aboutus.html', {'bl': bl})
-
-
-def blog(request):
-    bl = Blogdb.objects.all()
-    return render(request, 'blog.html', {'bl': bl})
-
-
-def doctors(request, drname):
-    dr = Doctordb.objects.filter(Department=drname)
-    return render(request, 'doctors.html', {'dr': dr})
+    return render(request, "aboutus.html", {
+        "stories": _approved_stories()[:3],
+        "doctor_total": Doctordb.objects.count(),
+        "department_total": Deptdb.objects.count(),
+    })
 
 
 def service(request):
-    dept = Deptdb.objects.all()
-    return render(request, 'service.html', {'dept': dept})
+    return render(request, "service.html", {"departments": _departments_with_counts()})
 
 
-def appoinmentsave(request):
-    if request.method == "POST":
-        dt = request.POST.get('department')
-        nm = request.POST.get('name')
-        em = request.POST.get('email')
-        da = request.POST.get('date')
-        tim = request.POST.get('time')
-        ph = request.POST.get('phone')
-        obj = Appoinmentdb(Department=dt, DrName=nm, Email=em, Phone=ph, Date=da, Time=tim)
-        obj.save()
-        messages.success(request, "Booking successfully")
-        return redirect(index)
+def doctor_list(request):
+    doctors = Doctordb.objects.all()
+    query = request.GET.get("q", "").strip()
+    department = request.GET.get("department", "").strip()
+    if query:
+        doctors = doctors.filter(Q(Name__icontains=query) | Q(Department__icontains=query)
+                                 | Q(Language__icontains=query))
+    if department:
+        doctors = doctors.filter(Department=department)
+    return render(request, "doctors.html", {
+        "doctors": doctors,
+        "departments": Deptdb.objects.all(),
+        "query": query,
+        "selected_department": department,
+        "department_obj": Deptdb.objects.filter(DeptName=department).first() if department else None,
+    })
 
 
-def loginfr(request):
-    return render(request, 'loginpg.html')
-
-
-def registersave(request):
-    if request.method == "POST":
-        un = request.POST.get('username')
-        en = request.POST.get('email')
-        ps = request.POST.get('password')
-        obj = Registerdb(Username=un, Email=en, Password=ps)
-        obj.save()
-        return redirect(loginfr)
-
-
-def userlogin(request):
-    if request.method == "POST":
-        user = request.POST.get('username')
-        pwd = request.POST.get('password')
-        if Registerdb.objects.filter(Username=user, Password=pwd).exists():
-            request.session['username'] = user
-            request.session['password'] = pwd
-            return redirect(index)
-        else:
-            return redirect(loginfr)
-    else:
-        return redirect(loginfr)
-
-
-def logout(request):
-    del request.session['username']
-    del request.session['password']
-    return redirect(index)
-
-
-def blogsave(request):
-    if request.method == "POST":
-        na = request.POST.get('name')
-        em = request.POST.get('email')
-        sub = request.POST.get('subject')
-        msg = request.POST.get('message')
-        obj = Blogdb(Name=na, Email=em, Subject=sub, Message=msg)
-        obj.save()
-        return redirect(blog)
-
-
-def profile(request):
-    dt = Profiledb.objects.all()
-    return render(request, 'profile.html', {'dt': dt})
-
-
-def profileedit(request):
-    return render(request, 'profileedit.html')
-
-
-def profilesave(request):
-    if request.method == "POST":
-        username = request.POST.get('username')
-        name = request.POST.get('name')
-        gender = request.POST.get('gender')
-        birthday = request.POST.get('birthday')
-        email = request.POST.get('email')
-        location = request.POST.get('location')
-        phone = request.POST.get('phone')
-        image = request.FILES['image']
-        obj = Profiledb(Username=username, Name=name, Gender=gender, Birthday=birthday, Email=email, Location=location,
-                        Phone=phone, Image=image)
-        obj.save()
-        return redirect(profile)
-
-
-def proedit(request, dataid):
-    edit = Profiledb.objects.get(id=dataid)
-    return render(request, 'proedit.html', {'edit': edit})
-
-
-def profileupdate(request, dataid):
-    if request.method == "POST":
-        username = request.POST.get('username')
-        name = request.POST.get('name')
-        gender = request.POST.get('gender')
-        birthday = request.POST.get('birthday')
-        email = request.POST.get('email')
-        location = request.POST.get('location')
-        phone = request.POST.get('phone')
-        try:
-            img = request.FILES['image']
-            fs = FileSystemStorage()
-            file = fs.save(img.name, img)
-        except MultiValueDictKeyError:
-            file = Profiledb.objects.get(id=dataid).Image
-        Profiledb.objects.filter(id=dataid).update(Username=username, Name=name, Gender=gender,
-                                                   Birthday=birthday, Email=email, Location=location,
-                                                   Phone=phone, Image=file)
-        return redirect(profile)
+def doctors(request, drname):
+    """Legacy URL /doctors/<department>/ — kept so old links keep working."""
+    return redirect(f"{reverse('doctor_list')}?department={drname}")
 
 
 def singledoctor(request, proid):
-    single = Doctordb.objects.get(id=proid)
-    return render(request, 'singledoctor.html', {'single': single})
+    doctor = get_object_or_404(Doctordb, id=proid)
+    department = Deptdb.objects.filter(DeptName=doctor.Department).first()
+
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            messages.info(request, "Please sign in to book an appointment.")
+            return redirect(f"{reverse('loginfr')}?next={request.path}")
+        form = AppointmentForm(request.POST, doctor=doctor)
+        if form.is_valid():
+            appointment = form.save(commit=False)
+            appointment.Doctor = doctor
+            appointment.DrName = doctor.Name
+            appointment.Department = doctor.Department
+            appointment.Registrations = doctor.Registrations
+            appointment.Username = request.user.username
+            appointment.save()
+            messages.success(request, "Your appointment request has been received.")
+            return redirect("appointment_detail", pk=appointment.pk)
+    else:
+        initial = {}
+        if request.user.is_authenticated:
+            profile = Profiledb.objects.filter(Username=request.user.username).first()
+            initial = {
+                "Name": (profile and profile.Name) or request.user.get_full_name(),
+                "Email": (profile and profile.Email) or request.user.email,
+                "Phone": profile and profile.Phone,
+            }
+        form = AppointmentForm(doctor=doctor, initial=initial)
+
+    return render(request, "singledoctor.html", {
+        "single": doctor,
+        "department": department,
+        "form": form,
+        "related": Doctordb.objects.filter(Department=doctor.Department).exclude(id=doctor.id)[:3],
+    })
 
 
-def videocall(request):
-    return render(request, 'videocall.html')
+def doctor_slots(request, proid):
+    """Booked time slots for a doctor on a given date (used to grey out the slot picker)."""
+    doctor = get_object_or_404(Doctordb, id=proid)
+    try:
+        day = date_cls.fromisoformat(request.GET.get("date", ""))
+    except ValueError:
+        return JsonResponse({"booked": []})
+    booked = Appointmentdb.objects.filter(
+        Doctor=doctor, Date=day, Status__in=[Appointmentdb.PENDING, Appointmentdb.CONFIRMED]
+    ).values_list("Time", flat=True)
+    return JsonResponse({"booked": [t.strftime("%H:%M") for t in booked if t]})
 
 
-def joinmeeting(request):
-    return render(request, 'videocall.html')
+def _user_appointments(user):
+    return Appointmentdb.objects.filter(Username__iexact=user.username)
 
 
-def appointment(request):
-    return render(request, 'appoinmentpage.html')
+@login_required
+def appointment_detail(request, pk):
+    appointment = get_object_or_404(Appointmentdb, pk=pk)
+    if not (request.user.is_staff or (appointment.Username or "").lower() == request.user.username.lower()):
+        raise Http404
+    return render(request, "appointment_detail.html", {"appointment": appointment})
 
 
-def appointmentsave(request):
-    if request.method == 'POST':
-        dr = request.POST.get('drname')
-        reg = request.POST.get('reg')
-        us = request.POST.get('username')
-        nm = request.POST.get('name')
-        ph = request.POST.get('phone')
-        em = request.POST.get('email')
-        dt = request.POST.get('date')
-        tm = request.POST.get('time')
-        obj = Appointmentdb(DrName=dr, Registrations=reg, Name=nm, Username=us, Phone=ph, Email=em, Date=dt, Time=tm)
-        obj.save()
-        messages.success(request, "Booking successfully")
-        return redirect(indexp)
+@login_required
+@require_POST
+def appointment_cancel(request, pk):
+    appointment = get_object_or_404(_user_appointments(request.user), pk=pk)
+    if appointment.is_active:
+        appointment.Status = Appointmentdb.CANCELLED
+        appointment.save(update_fields=["Status"])
+        messages.success(request, f"Appointment {appointment.reference} has been cancelled.")
+    return redirect("profile")
+
+
+def blog(request):
+    form = StoryForm(initial={"Name": request.user.get_full_name() or request.user.username,
+                              "Email": request.user.email} if request.user.is_authenticated else None)
+    return render(request, "blog.html", {"stories": _approved_stories(), "form": form})
+
+
+@require_POST
+def blogsave(request):
+    form = StoryForm(request.POST)
+    if form.is_valid():
+        form.save()
+        messages.success(request, "Thank you for sharing! Your story will appear once our team reviews it.")
+        return redirect("blog")
+    return render(request, "blog.html", {"stories": _approved_stories(), "form": form})
 
 
 def contact(request):
-    if request.method == 'POST':
-        message_name = request.POST.get('message_name')
-        message_email = request.POST.get('message_email')
-        message_subject = request.POST.get('message_subject')
-        message = request.POST.get('umessage')
-
-        # Create and send the email
-        email_message = render_to_string('email_template.html', {
-            'message_name': message_name,
-            'message_email': message_email,
-            'message_subject': message_subject,
-            'message': message,
-        })
-
-        send_mail(
-            subject=message_subject,
-            message='',
-            from_email=settings.DEFAULT_FROM_EMAIL,  # Set your default 'from' email in settings.py
-            recipient_list=[settings.CONTACT_EMAIL],  # Set the recipient email address in settings.py
-            html_message=email_message,
-        )
-
-        messages.success(request, 'Your message was sent successfully.')
-        return redirect('contact')
-
-    return render(request, 'contact.html')
+    form = ContactForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        msg = form.save()
+        if settings.CONTACT_EMAIL:
+            try:
+                send_mail(
+                    subject=f"[Website] {msg.Subject}",
+                    message=f"From: {msg.Name} <{msg.Email}> {msg.Phone}\n\n{msg.Message}",
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[settings.CONTACT_EMAIL],
+                    html_message=render_to_string("email_template.html", {"msg": msg}),
+                )
+            except Exception:
+                logger.exception("Could not send contact email")
+        messages.success(request, "Thanks for reaching out — our team will get back to you shortly.")
+        return redirect("contact")
+    return render(request, "contact.html", {"form": form})
 
 
-# pdf
-def render_to_pdf(template_src, context_dict={}):
-    template = get_template(template_src)
-    html = template.render(context_dict)
-    result = BytesIO()
-    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
-    if not pdf.err:
-        return HttpResponse(result.getvalue(), content_type='application/pdf')
-    return None
+def _safe_next(request, default="index"):
+    target = request.POST.get("next") or request.GET.get("next")
+    if target and url_has_allowed_host_and_scheme(target, {request.get_host()}, request.is_secure()):
+        return target
+    return reverse(default)
 
 
-data = {
-    "company": "Dennnis Ivanov Company",
-    "address": "123 Street name",
-    "city": "Vancouver",
-    "state": "WA",
-    "zipcode": "98663",
-    "phone": "555-555-2345",
-    "email": "youremail@dennisivy.com",
-    "website": "dennisivy.com",
-}
+def loginfr(request):
+    if request.user.is_authenticated:
+        return redirect("profile")
+    return render(request, "loginpg.html", {
+        "login_form": LoginForm(request),
+        "register_form": RegisterForm(),
+        "next": request.GET.get("next", ""),
+        "active_tab": request.GET.get("tab", "login"),
+    })
 
 
-# Opens up page as PDF
-class ViewPDF(View):
-    def get(self, request):
-        pdf = render_to_pdf('app/pdf_template.html', data)
-
-        return HttpResponse(pdf, content_type='application/pdf')
-
-
-# Automatically downloads to PDF file
-class DownloadPDF(View):
-    def get(self, request, *args, **kwargs):
-        pdf = render_to_pdf('app/pdf_template.html', data)
-
-        response = HttpResponse(pdf, content_type='application/pdf')
-        filename = 'Invoice_%s.pdf' % ("HolyCross")
-        content = "attachment; filename='%s'" % (filename)
-        response['Content-Disposition'] = content
-        return response
+@require_POST
+def userlogin(request):
+    form = LoginForm(request, data=request.POST)
+    if form.is_valid():
+        auth_login(request, form.get_user())
+        messages.success(request, f"Welcome back, {form.get_user().get_short_name() or form.get_user().username}!")
+        return redirect(_safe_next(request))
+    return render(request, "loginpg.html", {
+        "login_form": form, "register_form": RegisterForm(),
+        "next": request.POST.get("next", ""), "active_tab": "login",
+    })
 
 
-def indexp(request):
-    context = {}
-    return render(request, 'app/index.html', context)
+@require_POST
+def registersave(request):
+    form = RegisterForm(request.POST)
+    if form.is_valid():
+        user = form.save()
+        Profiledb.objects.get_or_create(Username=user.username,
+                                        defaults={"Name": user.first_name, "Email": user.email})
+        auth_login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+        messages.success(request, "Your account has been created. Welcome to HolyCross!")
+        return redirect(_safe_next(request))
+    return render(request, "loginpg.html", {
+        "login_form": LoginForm(request), "register_form": form,
+        "next": request.POST.get("next", ""), "active_tab": "register",
+    })
+
+
+@require_POST
+def logout(request):
+    auth_logout(request)
+    messages.success(request, "You have been signed out.")
+    return redirect("index")
+
+
+@login_required
+def profile(request):
+    profile_obj = Profiledb.objects.filter(Username=request.user.username).first()
+    appointments = _user_appointments(request.user).select_related("Doctor")
+    upcoming = [a for a in appointments if a.is_active]
+    past = [a for a in appointments if not a.is_active]
+    return render(request, "profile.html", {
+        "profile": profile_obj,
+        "upcoming": sorted(upcoming, key=lambda a: (a.Date, a.Time)),
+        "past": past,
+    })
+
+
+@login_required
+def profileedit(request):
+    profile_obj, _ = Profiledb.objects.get_or_create(
+        Username=request.user.username,
+        defaults={"Name": request.user.get_full_name(), "Email": request.user.email})
+    form = ProfileForm(request.POST or None, request.FILES or None, instance=profile_obj)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Your profile has been updated.")
+        return redirect("profile")
+    return render(request, "profileedit.html", {"form": form, "profile": profile_obj})
+
+
+@login_required
+def videocall(request):
+    return render(request, "videocall.html", {
+        "zego_app_id": settings.ZEGO_APP_ID if settings.ZEGO_APP_ID.isdigit() else "",
+        "zego_server_secret": settings.ZEGO_SERVER_SECRET,
+    })
+
+
+@cache_control(public=True, max_age=60 * 60 * 24 * 7)
+def media(request, path):
+    """Serve uploaded files from the upload root first, then the bundled media folder."""
+    for root in dict.fromkeys([Path(settings.UPLOAD_ROOT), Path(settings.MEDIA_ROOT)]):
+        try:
+            full_path = Path(safe_join(root, path))
+        except SuspiciousFileOperation:
+            raise Http404
+        if full_path.is_file():
+            return serve(request, path, document_root=root)
+    raise Http404
+
+
+def page_not_found(request, exception):
+    return render(request, "404.html", status=404)

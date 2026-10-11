@@ -1,0 +1,7 @@
+<form method="post" action="{% url 'appointment_status' dataid=a.id %}" class="d-inline">
+  {% csrf_token %}
+  <input type="hidden" name="next" value="{{ request.get_full_path }}">
+  <select name="status" class="form-select form-select-sm status-select status-{{ a.Status }}" onchange="this.form.submit()" aria-label="Status for {{ a.reference }}">
+    {% for key, label in a.STATUS_CHOICES %}<option value="{{ key }}" {% if key == a.Status %}selected{% endif %}>{{ label }}</option>{% endfor %}
+  </select>
+</form>

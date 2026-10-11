@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Appointment {{ appointment.reference }} — {{ HOSPITAL.name }}{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container" style="max-width:760px">
+    <div class="text-center mb-4 no-print">
+      <span class="icon-pill accent mb-3" style="width:64px;height:64px;font-size:1.8rem"><i class="bi bi-calendar2-check"></i></span>
+      <h1 class="h2">{% if appointment.Status == 'CANCELLED' %}Appointment cancelled{% else %}Appointment {{ appointment.get_Status_display|lower }}{% endif %}</h1>
+      <p class="text-muted">{% if appointment.Status == 'PENDING' %}We've received your request. Our front desk will confirm it shortly.{% else %}Here are the details of your visit.{% endif %}</p>
+    </div>
+
+    <div class="form-card">
+      <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
+        <div>
+          <div class="text-muted small">Booking reference</div>
+          <div class="h4 mb-0">{{ appointment.reference }}</div>
+        </div>
+        <span class="status status-{{ appointment.Status }}">{{ appointment.get_Status_display }}</span>
+      </div>
+      <div class="row g-4">
+        <div class="col-sm-6"><div class="text-muted small">Doctor</div><div class="fw-semibold">{{ appointment.DrName }}</div><div class="small text-muted">{{ appointment.Department }}</div></div>
+        <div class="col-sm-6"><div class="text-muted small">Date &amp; time</div><div class="fw-semibold">{{ appointment.Date|date:"l, j F Y" }}</div><div class="small text-muted">{{ appointment.Time|time:"g:i A" }}</div></div>
+        <div class="col-sm-6"><div class="text-muted small">Patient</div><div class="fw-semibold">{{ appointment.Name }}</div><div class="small text-muted">{{ appointment.Phone }}{% if appointment.Email %} · {{ appointment.Email }}{% endif %}</div></div>
+        <div class="col-sm-6"><div class="text-muted small">Location</div><div class="fw-semibold">{{ HOSPITAL.name }}</div><div class="small text-muted">{{ HOSPITAL.address }}</div></div>
+        {% if appointment.Reason %}<div class="col-12"><div class="text-muted small">Reason for visit</div><div>{{ appointment.Reason }}</div></div>{% endif %}
+      </div>
+      <div class="alert border-0 rounded-4 mt-4 mb-0 small" style="background:var(--hc-bg-soft)">
+        <i class="bi bi-info-circle me-1"></i>Please arrive 15 minutes early with a photo ID and any previous reports. For emergencies call {{ HOSPITAL.emergency }}.
+      </div>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 justify-content-center mt-4 no-print">
+      <button class="btn btn-outline-primary" onclick="window.print()"><i class="bi bi-printer me-1"></i>Print / save PDF</button>
+      <a class="btn btn-primary" href="{% url 'profile' %}#appointments">My appointments</a>
+      {% if appointment.is_active and appointment.Username|lower == user.username|lower %}
+      <form method="post" action="{% url 'appointment_cancel' pk=appointment.pk %}" data-confirm="Cancel this appointment?">
+        {% csrf_token %}<button class="btn btn-link text-danger" type="submit">Cancel appointment</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

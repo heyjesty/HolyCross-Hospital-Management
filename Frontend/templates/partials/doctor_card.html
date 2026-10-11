@@ -1,0 +1,19 @@
+<article class="doctor-card">
+  <a class="doctor-photo d-block" href="{% url 'singledoctor' proid=doctor.id %}">
+    {% if doctor.Image %}
+      <img src="{{ doctor.Image.url }}" alt="Portrait of {{ doctor.Name }}" loading="lazy">
+    {% else %}
+      <span class="photo-placeholder"><i class="bi bi-person"></i></span>
+    {% endif %}
+    {% if doctor.Timing %}<span class="badge-shift"><i class="bi bi-clock me-1"></i>{{ doctor.Timing|lower|capfirst }}</span>{% endif %}
+  </a>
+  <div class="doctor-body">
+    <h3><a class="text-reset" href="{% url 'singledoctor' proid=doctor.id %}">{{ doctor.Name }}</a></h3>
+    <span class="dept">{{ doctor.Department }}</span>
+    <div class="facts">
+      {% if doctor.Experience %}<span><i class="bi bi-award me-1"></i>{{ doctor.Experience }}</span>{% endif %}
+      {% if doctor.Education %}<span><i class="bi bi-mortarboard me-1"></i>{{ doctor.Education }}</span>{% endif %}
+    </div>
+    <a href="{% url 'singledoctor' proid=doctor.id %}" class="btn btn-outline-primary btn-sm mt-auto align-self-start">View profile &amp; book</a>
+  </div>
+</article>

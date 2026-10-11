@@ -1,47 +1,69 @@
-# Enviorment Actvate:
-cd HolyCross.github.io> 
-venv\Scripts\activate
+# HolyCross Hospital Management
 
-**Username**: JESTY
-**Password**: 1234
+A hospital website and appointment system built with Django 5.2.
 
-# HolyCross.github.io
-HolyCross is a web-based application designed to help hospitals to appointment scheduling process for patients who want to consult with specific doctors. 
-Project Title: HolyCross - Hospital Management
+**Patients** can browse departments and doctors, register securely, book 30-minute appointment slots, and track or cancel their bookings from their account.
+**Staff** use a dashboard at `/Backend/` to confirm appointments, manage doctors and departments, read contact messages and moderate patient stories.
 
-Project Overview:
-HolyCross is a web-based application designed to help hospitals to appointment scheduling process for patients who want to consult with specific doctors. Below are the key features and functionalities of this project:
+## Features
 
-1. User Authentication:
+| Public website | Staff dashboard (`/Backend/`) |
+| --- | --- |
+| Responsive, modern design (Bootstrap 5) | Overview with today's schedule, 7-day booking chart, status counts |
+| Doctor search by name, department or language | Appointment list with filters, search and one-click status updates |
+| Doctor profiles with live slot availability | Doctor and department management (administrators) |
+| Booking with validation (no past dates, no double-booking) | Patient directory (administrators) |
+| Patient accounts with hashed passwords, profile, history, cancellation | Contact-form inbox, patient-story moderation |
+| Printable booking confirmation | Role-based access: staff vs administrator |
+| Contact form (stored, optionally emailed), video consultation (optional) | Django admin at `/admin/` |
 
-The system provides secure user authentication for patients, doctors, and administrative staff.
-Patients can register, log in, and manage their profiles.
-2. Doctor Profiles:
+## Run locally
 
-The system maintains detailed profiles for each doctor, including their specialization, availability, contact information, and brief professional bio.
-3. Appointment Booking:
+```bash
+python -m venv .venv
+.venv\Scripts\activate          # macOS/Linux: source .venv/bin/activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py seed_demo       # demo departments, doctors and stories (only if the DB is empty)
+python manage.py createsuperuser # your staff/admin login
+python manage.py runserver
+```
 
-Patients can search for doctors based on specialization availability.
-Patients can view the profiles of doctors and check their availability slots.
-They can select a convenient time slot and request an appointment with the chosen doctor.
-4. Notifications and Reminders:
+Open http://127.0.0.1:8000. The staff dashboard is at http://127.0.0.1:8000/Backend/.
+Optional settings go in a `.env` file (copy `.env.example`).
 
-Admin receive Message reminders about their Issue via email.
-7. Admin Dashboard:
+Run the tests with `python manage.py test`.
 
-The administrative dashboard allows staff to manage doctor profiles, patient records, and appointment schedules.
-Staff can also generate reports on appointment statistics and doctor workload.
-8. Data Security and Privacy:
+## Deploy to Vercel
 
-Patient data is stored securely, and the system complies with data protection regulations (e.g., HIPAA) if applicable.
-9. Search and Filters:
+1. Push this repository to GitHub.
+2. In Vercel, choose **Add New → Project** and import the repo. No build settings are needed: `vercel.json` already configures the Python runtime.
+3. **Add a database** (recommended). Open **Storage → Create → Neon (Postgres)** and connect it to the project. This sets `DATABASE_URL` / `POSTGRES_URL` automatically. Any Postgres connection string in `DATABASE_URL` also works.
+4. Under **Settings → Environment Variables**, add:
 
-The system provides search and filter options for patients to find doctors based on various criteria like specialty or location.
-10. Error Handling and Validation:
-- The system includes error handling and data validation to ensure data integrity and a smooth user experience.
+   | Variable | Value |
+   | --- | --- |
+   | `DJANGO_SECRET_KEY` | a long random string: `python -c "import secrets; print(secrets.token_urlsafe(50))"` |
+   | `DJANGO_ADMIN_USERNAME` | staff/admin username to create on first start |
+   | `DJANGO_ADMIN_PASSWORD` | a strong password |
+   | `DJANGO_ALLOWED_HOSTS`, `DJANGO_CSRF_TRUSTED_ORIGINS` | only if you add a custom domain (see `.env.example`) |
 
-11. Technology Stack:
-- Django is used for the back-end, along with Python for scripting.
-- Front-end development can be done using HTML, CSS, and JavaScript.
-- The database system can be MySQL.
-- Version control can be managed with Git and hosted on platforms like GitHub.
+5. Deploy. On each cold start the app automatically runs migrations, loads demo data into an empty database and creates the admin account.
+
+> **No database configured?** The site still runs, but on a temporary SQLite database in `/tmp`. A banner warns visitors that data resets. Use this only for previews.
+
+### Things to know about serverless hosting
+
+- **Uploaded images** (new doctor/department/profile photos) are written to temporary storage on Vercel and disappear when the instance recycles. The bundled photos in `media/` are always available. For permanent uploads, connect object storage such as Vercel Blob, S3 or Cloudinary through `django-storages`.
+- **Email** is optional. Set `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD` (for Gmail, an app password) and `CONTACT_EMAIL` to receive contact-form messages by email. Without them, messages still appear in the dashboard inbox.
+- **Video consultation** appears only when `ZEGO_APP_ID` and `ZEGO_SERVER_SECRET` are set. It uses ZegoCloud's test-token mode, which exposes the secret in the browser. That is fine for demos, but production use needs a server-generated token.
+
+## Project structure
+
+```
+HospitalManagement/   settings (env-driven), urls, wsgi entry point, Vercel bootstrap
+Frontend/             public site: views, forms, templates, static/hc (CSS, JS, images)
+Backend/              staff dashboard, Deptdb/Doctordb models, demo fixture, seed_demo command
+media/                bundled doctor and department images
+vercel.json           Vercel Python runtime configuration
+```

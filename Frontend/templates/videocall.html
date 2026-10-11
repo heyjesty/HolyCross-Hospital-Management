@@ -1,119 +1,43 @@
-{% load static %}
-<html>
-<head>
-    <title>HolyCross Hospital Management</title>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700" rel="stylesheet">
-      <link rel="icon" href="{% static 'assets/images/vejq5m3sm4396c01m3etnnp4r8.png' %}" type="image/x-icon">
+{% extends "base.html" %}
+{% block title %}Video consultation — {{ HOSPITAL.name }}{% endblock %}
 
-    <link rel="stylesheet" href="{% static 'css/open-iconic-bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+{% block content %}
+{% include "partials/page_header.html" with heading="Video consultation" subheading="Join your doctor securely from your browser. Share the room link only with your care team." %}
+<section class="section pt-5">
+  <div class="container">
+    {% if zego_app_id and zego_server_secret %}
+      <div id="video-root" class="form-card p-0 overflow-hidden" style="height:72vh;min-height:480px"></div>
+    {% else %}
+      <div class="empty-state hc-card">
+        <i class="bi bi-camera-video-off"></i>
+        <h2 class="h5 mt-3 text-body">Video consultations are not available right now</h2>
+        <p>Please call {{ HOSPITAL.phone }} to arrange a teleconsultation.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
 
-    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
-
-    <link rel="stylesheet" href="{% static 'css/aos.css' %}">
-
-    <link rel="stylesheet" href="{% static 'css/ionicons.min.css' %}">
-
-    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css' %}">
-    <link rel="stylesheet" href="{% static 'css/jquery.timepicker.css' %}">
-
-
-    <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
-    <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <style>
-        #root {
-            width: 100vw;
-            height: 100vh;
-            }
-    </style>
-</head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-	    <div class="container" >
-	      <a style="color:black;" class="navbar-brand" href="{% url 'index' %}">HOLY<span>CROSS</span></a>
-	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-	        <span class="oi oi-menu"></span> Menu
-	      </button>
-
-	      <div class="collapse navbar-collapse" id="ftco-nav">
-	      </div>
-	    </div>
-	  </nav>
-    <div id="root"></div>
-
-  <script src="{% static 'js/jquery.min.js' %}"></script>
-  <script src="{% static 'js/jquery-migrate-3.0.1.min.js' %}"></script>
-  <script src="{% static 'js/popper.min.js' %}"></script>
-  <script src="{% static 'js/bootstrap.min.js' %}"></script>
-  <script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
-  <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-  <script src="{% static 'js/jquery.stellar.min.js' %}"></script>
-  <script src="{% static 'js/owl.carousel.min.js' %}"></script>
-  <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
-  <script src="{% static 'js/aos.js' %}"></script>
-  <script src="{% static 'js/jquery.animateNumber.min.js' %}"></script>
-  <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
-  <script src="{% static 'js/jquery.timepicker.min.js' %}"></script>
-  <script src="{% static 'js/scrollax.min.js' %}"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-  <script src="{% static 'js/google-map.js' %}"></script>
-  <script src="{% static 'js/main.js' %}"></script>
-</body>
-
-<script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
+{% block extra_js %}
+{% if zego_app_id and zego_server_secret %}
+<script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt@2.18.4/zego-uikit-prebuilt.js"></script>
 <script>
-window.onload = function () {
-    function getUrlParams(url) {
-        let urlStr = url.split('?')[1];
-        const urlSearchParams = new URLSearchParams(urlStr);
-        const result = Object.fromEntries(urlSearchParams.entries());
-        return result;
-    }
-
-
-        // Generate a Token by calling a method.
-        // @param 1: appID
-        // @param 2: serverSecret
-        // @param 3: Room ID
-        // @param 4: User ID
-        // @param 5: Username
-    const roomID = getUrlParams(window.location.href)['roomID'] || (Math.floor(Math.random() * 10000) + "");
-    const userID = Math.floor(Math.random() * 10000) + "";
-    const userName = "{{request.session.username}}"
-<!--    const userName = "userName" + userID;-->
-    const appID = 1055284142;
-    const serverSecret = "2e795f79984918d3824d21bebdc4ec76";
-    const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID, userID, userName);
-
-
-        const zp = ZegoUIKitPrebuilt.create(kitToken);
-        zp.joinRoom({
-            container: document.querySelector("#root"),
-            sharedLinks: [{
-                name: 'Personal link',
-                url: window.location.protocol + '//' + window.location.host  + window.location.pathname + '?roomID=' + roomID,
-            }],
-            scenario: {
-                mode: ZegoUIKitPrebuilt.VideoConference,
-            },
-
-           	turnOnMicrophoneWhenJoining: true,
-           	turnOnCameraWhenJoining: true,
-           	showMyCameraToggleButton: true,
-           	showMyMicrophoneToggleButton: true,
-           	showAudioVideoSettingsButton: true,
-           	showScreenSharingButton: true,
-           	showTextChat: true,
-           	showUserList: true,
-           	maxUsers: 2,
-           	layout: "Auto",
-           	showLayoutButton: false,
-
-            });
-}
+window.addEventListener("load", function () {
+  var params = new URLSearchParams(window.location.search);
+  var roomID = params.get("roomID") || String(Math.floor(Math.random() * 1000000));
+  var userID = "{{ user.id }}-" + Math.floor(Math.random() * 10000);
+  var userName = "{{ user.get_full_name|default:user.username|escapejs }}";
+  var kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest({{ zego_app_id }}, "{{ zego_server_secret|escapejs }}", roomID, userID, userName);
+  var zp = ZegoUIKitPrebuilt.create(kitToken);
+  zp.joinRoom({
+    container: document.getElementById("video-root"),
+    sharedLinks: [{ name: "Room link", url: location.origin + location.pathname + "?roomID=" + roomID }],
+    scenario: { mode: ZegoUIKitPrebuilt.OneONoneCall },
+    showScreenSharingButton: true,
+    showTextChat: true,
+    maxUsers: 2
+  });
+});
 </script>
-
-</html>
+{% endif %}
+{% endblock %}

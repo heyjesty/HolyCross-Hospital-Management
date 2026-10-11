@@ -1,68 +1,40 @@
-<!DOCTYPE html>
-{% extends "indexpage.html" %}
-{% block content %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<div class="card-body">
-              <h5 class="card-title">DISPLAY DEPARTMENT</h5>
-			  <div class="table-responsive">
-              <table  class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th scope="col">DEPARTMENT NAME</th>
-                    <th scope="col">DESCRIPTION</th>
-                    <th scope="col">IMAGE</th>
-                    <th scope="col">EDIT</th>
-                    <th scope="col">DELETE</th>
-                  </tr>
-                </thead>
-                <tbody>
-                {% for i in data %}
-                  <tr>
-                    <td >{{i.DeptName}}</td>
-                    <td>{{i.Description}}</td>
-                    <td>
-                        <img src="{{i.Image.url}}" height="50px" width="50px">
-                    </td>
-                    <td>
-                        <form action="{% url 'editdept' dataid=i.id %}">
-                            <button class="btn btn-light px-5" >EDIT</button>
-                        </form>
-                    </td>
-                      <td>
-                        <form action="{% url 'deletedept' dataid=i.id %}">
-                            <button class="btn btn-light px-5" >DELETE</button>
-                        </form>
-                    </td>
-                  </tr>
-                {% endfor %}
-                </tbody>
-              </table>
-            </div>
-            </div>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% extends "dashboard_base.html" %}
+{% block title %}Departments{% endblock %}
+{% block heading %}Departments{% endblock %}
+{% block actions %}{% if user.is_superuser %}<a href="{% url 'department' %}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg me-1"></i>Add department</a>{% endif %}{% endblock %}
 
-    {% if messages %}
-      {% for i in messages %}
-           {% if i.tags == 'warning' %}
-               <script>
-                    swal('{{i}}','','warning');
-               </script>
-           {% elif i.tags == 'error' %}
-               <script>
-                    swal('{{i}}','','error');
-               </script>
-           {% else %}
-               <script>
-                    swal('{{i}}','','success');
-               </script>
-           {% endif %}
-        {% endfor %}
-    {% endif %}
-</body>
-</html>
+{% block content %}
+<div class="panel p-0">
+  {% if data %}
+  <div class="table-responsive">
+    <table class="table table-dash">
+      <thead><tr><th class="ps-4">Department</th><th>Description</th><th>Doctors</th>{% if user.is_superuser %}<th class="text-end pe-4">Actions</th>{% endif %}</tr></thead>
+      <tbody>
+      {% for d in data %}
+        <tr>
+          <td class="ps-4">
+            <div class="d-flex align-items-center gap-3">
+              <span class="icon-pill" style="width:44px;height:44px">{% if d.Image %}<img class="thumb-sm" src="{{ d.Image.url }}" alt="">{% else %}<i class="bi bi-hospital"></i>{% endif %}</span>
+              <span class="fw-semibold">{{ d.DeptName }}</span>
+            </div>
+          </td>
+          <td class="text-muted small" style="max-width:420px">{{ d.Description|truncatechars:110 }}</td>
+          <td><a href="{% url 'doctordisplay' %}?department={{ d.DeptName|urlencode }}" class="fw-semibold">{{ d.doctor_count }}</a></td>
+          {% if user.is_superuser %}
+          <td class="text-end pe-4 text-nowrap">
+            <a href="{% url 'editdept' dataid=d.id %}" class="btn btn-sm btn-light-soft"><i class="bi bi-pencil"></i> Edit</a>
+            <form method="post" action="{% url 'deletedept' dataid=d.id %}" class="d-inline" data-confirm="Delete the {{ d.DeptName }} department?">
+              {% csrf_token %}<button class="btn btn-sm btn-link text-danger" type="submit" aria-label="Delete"><i class="bi bi-trash"></i></button>
+            </form>
+          </td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state"><i class="bi bi-hospital"></i><p class="mt-2">No departments yet.</p>{% if user.is_superuser %}<a href="{% url 'department' %}" class="btn btn-primary btn-sm">Add the first department</a>{% endif %}</div>
+  {% endif %}
+</div>
 {% endblock %}

@@ -1,0 +1,156 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ HOSPITAL.name }} — Compassionate care, close to home{% endblock %}</title>
+  <meta name="description" content="{% block description %}{{ HOSPITAL.name }}: find specialist doctors, book appointments online and manage your visits — all in one place.{% endblock %}">
+  <meta name="theme-color" content="#0b5fa5">
+  <link rel="icon" href="{% static 'hc/img/favicon.svg' %}" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" integrity="sha384-XGjxtQfXaH2tnPFa9x+ruJTuLE3Aa6LhHSWRr1XeTyhezb4abCG4ccI5AkVDxqC+" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'hc/css/site.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  {% with url_name=request.resolver_match.url_name %}
+  {% if DEMO_MODE %}<div class="text-center small py-1" style="background:#fff6e5;color:#7a4b00">Demo environment — bookings and accounts are temporary and reset periodically.</div>{% endif %}
+  <div class="topbar d-none d-md-block">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div class="d-flex gap-4">
+        <span><i class="bi bi-geo-alt me-1"></i>{{ HOSPITAL.address }}</span>
+        <a href="mailto:{{ HOSPITAL.email }}"><i class="bi bi-envelope me-1"></i>{{ HOSPITAL.email }}</a>
+      </div>
+      <div class="d-flex gap-4">
+        <span><i class="bi bi-clock me-1"></i>OPD Mon–Sat 8:00–19:00</span>
+        <a class="emergency" href="tel:{{ HOSPITAL.emergency|cut:' ' }}"><i class="bi bi-telephone-fill me-1"></i>24/7 Emergency {{ HOSPITAL.emergency }}</a>
+      </div>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-hc sticky-top">
+    <div class="container">
+      <a class="brand" href="{% url 'index' %}" aria-label="{{ HOSPITAL.name }} home">
+        <img class="brand-mark" src="{% static 'hc/img/logo.svg' %}" alt="">
+        <span>HolyCross<small>Hospital</small></span>
+      </a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item"><a class="nav-link {% if url_name == 'index' %}active{% endif %}" href="{% url 'index' %}">Home</a></li>
+          <li class="nav-item"><a class="nav-link {% if url_name == 'aboutus' %}active{% endif %}" href="{% url 'aboutus' %}">About</a></li>
+          <li class="nav-item"><a class="nav-link {% if url_name == 'service' %}active{% endif %}" href="{% url 'service' %}">Departments</a></li>
+          <li class="nav-item"><a class="nav-link {% if url_name == 'doctor_list' or url_name == 'singledoctor' %}active{% endif %}" href="{% url 'doctor_list' %}">Doctors</a></li>
+          <li class="nav-item"><a class="nav-link {% if url_name == 'blog' %}active{% endif %}" href="{% url 'blog' %}">Patient Stories</a></li>
+          <li class="nav-item"><a class="nav-link {% if url_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}">Contact</a></li>
+        </ul>
+        <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+          {% if user.is_authenticated %}
+            <div class="dropdown">
+              <a href="#" class="d-flex align-items-center gap-2 text-reset fw-semibold" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="avatar">{{ user.username|first|upper }}</span>
+                <span class="d-lg-none d-xl-inline">{{ user.get_short_name|default:user.username }}</span>
+                <i class="bi bi-chevron-down small"></i>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="bi bi-person me-2"></i>My profile</a></li>
+                <li><a class="dropdown-item" href="{% url 'profile' %}#appointments"><i class="bi bi-calendar2-check me-2"></i>My appointments</a></li>
+                {% if VIDEO_ENABLED %}<li><a class="dropdown-item" href="{% url 'videocall' %}"><i class="bi bi-camera-video me-2"></i>Video consultation</a></li>{% endif %}
+                {% if user.is_staff %}<li><a class="dropdown-item" href="{% url 'indexpage' %}"><i class="bi bi-speedometer2 me-2"></i>Staff dashboard</a></li>{% endif %}
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <form method="post" action="{% url 'logout' %}">{% csrf_token %}
+                    <button class="dropdown-item text-danger" type="submit"><i class="bi bi-box-arrow-right me-2"></i>Sign out</button>
+                  </form>
+                </li>
+              </ul>
+            </div>
+          {% else %}
+            <a class="btn btn-light-soft btn-sm" href="{% url 'loginfr' %}">Sign in</a>
+          {% endif %}
+          <a class="btn btn-primary btn-sm" href="{% url 'doctor_list' %}"><i class="bi bi-calendar-plus me-1"></i>Book appointment</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  {% endwith %}
+
+  {% if messages %}
+  <div class="toast-stack" aria-live="polite">
+    {% for message in messages %}
+    <div class="toast align-items-center {% if message.tags == 'error' %}text-bg-danger{% else %}bg-white{% endif %}" role="status">
+      <div class="d-flex">
+        <div class="toast-body d-flex gap-2 align-items-start">
+          {% if message.tags == 'error' %}<i class="bi bi-exclamation-circle-fill"></i>{% elif message.tags == 'info' %}<i class="bi bi-info-circle-fill text-primary"></i>{% else %}<i class="bi bi-check-circle-fill" style="color:var(--hc-accent)"></i>{% endif %}
+          <span>{{ message }}</span>
+        </div>
+        <button type="button" class="btn-close me-2 m-auto {% if message.tags == 'error' %}btn-close-white{% endif %}" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <main>{% block content %}{% endblock %}</main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row g-5">
+        <div class="col-lg-4">
+          <a class="brand mb-3" href="{% url 'index' %}">
+            <img class="brand-mark" src="{% static 'hc/img/logo.svg' %}" alt="">
+            <span>HolyCross<small>Hospital</small></span>
+          </a>
+          <p class="mt-3">Specialist care with a personal touch. Find the right doctor, book in minutes, and keep track of every visit online.</p>
+          <div class="social mt-3">
+            <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+            <a href="#" aria-label="X"><i class="bi bi-twitter-x"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+        <div class="col-6 col-lg-2">
+          <h4>Hospital</h4>
+          <ul>
+            <li><a href="{% url 'aboutus' %}">About us</a></li>
+            <li><a href="{% url 'service' %}">Departments</a></li>
+            <li><a href="{% url 'doctor_list' %}">Find a doctor</a></li>
+            <li><a href="{% url 'blog' %}">Patient stories</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-lg-2">
+          <h4>Patients</h4>
+          <ul>
+            <li><a href="{% url 'doctor_list' %}">Book appointment</a></li>
+            <li><a href="{% url 'profile' %}">My appointments</a></li>
+            <li><a href="{% url 'contact' %}">Contact us</a></li>
+            <li><a href="{% url 'loginpg' %}">Staff login</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-4">
+          <h4>Get in touch</h4>
+          <ul>
+            <li><i class="bi bi-geo-alt me-2"></i>{{ HOSPITAL.address }}</li>
+            <li><i class="bi bi-telephone me-2"></i><a href="tel:{{ HOSPITAL.phone|cut:' ' }}">{{ HOSPITAL.phone }}</a></li>
+            <li><i class="bi bi-envelope me-2"></i><a href="mailto:{{ HOSPITAL.email }}">{{ HOSPITAL.email }}</a></li>
+            <li class="text-white fw-semibold"><i class="bi bi-heart-pulse me-2" style="color:#ffb4b4"></i>Emergency 24/7: <a class="text-white" href="tel:{{ HOSPITAL.emergency|cut:' ' }}">{{ HOSPITAL.emergency }}</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom d-flex flex-column flex-md-row justify-content-between gap-2">
+        <span>&copy; {% now "Y" %} {{ HOSPITAL.name }}. All rights reserved.</span>
+        <span>In a medical emergency, call your local emergency number immediately.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="{% static 'hc/js/site.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

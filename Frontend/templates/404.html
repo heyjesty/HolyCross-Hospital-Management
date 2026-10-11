@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Page not found — {{ HOSPITAL.name }}{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container text-center" style="max-width:560px">
+    <span class="icon-pill mb-4" style="width:72px;height:72px;font-size:2rem"><i class="bi bi-signpost-split"></i></span>
+    <h1 class="h2">We couldn't find that page</h1>
+    <p class="text-muted">The page may have moved or the link may be out of date.</p>
+    <div class="d-flex gap-2 justify-content-center mt-4">
+      <a href="{% url 'index' %}" class="btn btn-primary">Go to homepage</a>
+      <a href="{% url 'doctor_list' %}" class="btn btn-outline-primary">Find a doctor</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

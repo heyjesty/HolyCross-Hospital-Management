@@ -1,347 +1,84 @@
-
-<!DOCTYPE html>
+{% extends "base.html" %}
 {% load static %}
-<html lang="en">
-  <head>
-    <title>HolyCross Hospital Management</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% block title %}About us — {{ HOSPITAL.name }}{% endblock %}
 
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700" rel="stylesheet">
-      <link rel="icon" href="{% static 'assets/images/vejq5m3sm4396c01m3etnnp4r8.png' %}" type="image/x-icon">
+{% block content %}
+{% include "partials/page_header.html" with heading="About HolyCross" crumb="About" subheading="A multi-speciality hospital built on clinical excellence, compassion and convenience." %}
 
-    <link rel="stylesheet" href="{% static 'css/open-iconic-bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
-
-    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
-
-    <link rel="stylesheet" href="{% static 'css/aos.css' %}">
-
-    <link rel="stylesheet" href="{% static 'css/ionicons.min.css' %}">
-
-    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css' %}">
-    <link rel="stylesheet" href="{% static 'css/jquery.timepicker.css' %}">
-
-
-    <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
-    <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  </head>
-  <body>
-
-	  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-	    <div class="container">
-	      <a class="navbar-brand" href="#">HOLY<span>CROSS</span></a>
-	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-	        <span class="oi oi-menu"></span> Menu
-	      </button>
-
-	      <div class="collapse navbar-collapse" id="ftco-nav">
-	        <ul class="navbar-nav ml-auto">
-	          <li class="nav-item"><a href="{% url 'index' %}" class="nav-link">Home</a></li>
-	          <li class="nav-item active"><a href="{% url 'aboutus' %}" class="nav-link">About</a></li>
-	          <li class="nav-item"><a href="{% url 'service' %}" class="nav-link">Services</a></li>
-	          <li class="nav-item"><a href="{% url 'blog' %}" class="nav-link">Blog</a></li>
-	          <li class="nav-item"><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
-                  <li class="nav-item dropdown">
-                    {% if request.session.username %}
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Hi,{{request.session.username}}
-          </a>
-                {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'loginfr' %}">Register/Login</a></li>
-                {% endif %}
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-          </ul>
-        </li>
-	        </ul>
-	      </div>
-	    </div>
-	  </nav>
-    <!-- END nav -->
-    <section class="home-slider owl-carousel">
-      <div class="slider-item bread-item" style="background-image: url({% static 'images/bg_1.jpg' %});" data-stellar-background-ratio="0.5">
-        <div class="overlay"></div>
-        <div class="container" data-scrollax-parent="true">
-          <div class="row slider-text align-items-end">
-            <div class="col-md-7 col-sm-12 ftco-animate mb-5">
-              <p class="breadcrumbs" data-scrollax=" properties: { translateY: '70%', opacity: 1.6}"><span class="mr-2"><a href="{% url 'index' %}">Home</a></span> <span>About</span></p>
-              <h1 class="mb-3" data-scrollax=" properties: { translateY: '70%', opacity: .9}">About Us</h1>
-            </div>
+<section class="section">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <div class="hero-media">
+          <img src="{% static 'hc/img/hero.jpg' %}" alt="HolyCross clinical team caring for a patient">
+          <div class="float-card one">
+            <span class="icon-pill accent"><i class="bi bi-award"></i></span>
+            <div><strong class="d-block">20+ years</strong><span class="text-muted small">of caring for our community</span></div>
           </div>
         </div>
       </div>
-    </section>
-
-		<section class="ftco-section">
-    	<div class="container">
-    		<div class="row d-md-flex">
-	    		<div class="col-md-6 ftco-animate img about-image order-md-last" style="background-image: url({% static 'images/about.jpg' %});">
-	    		</div>
-	    		<div class="col-md-6 ftco-animate pr-md-5 order-md-first">
-		    		<div class="row">
-		          <div class="col-md-12 nav-link-wrap mb-5">
-		            <div class="nav ftco-animate nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-		              <a class="nav-link active" id="v-pills-whatwedo-tab" data-toggle="pill" href="#v-pills-whatwedo" role="tab" aria-controls="v-pills-whatwedo" aria-selected="true">What we do</a>
-
-		              <a class="nav-link" id="v-pills-mission-tab" data-toggle="pill" href="#v-pills-mission" role="tab" aria-controls="v-pills-mission" aria-selected="false">Our mission</a>
-
-		              <a class="nav-link" id="v-pills-goal-tab" data-toggle="pill" href="#v-pills-goal" role="tab" aria-controls="v-pills-goal" aria-selected="false">Our goal</a>
-		            </div>
-		          </div>
-		          <div class="col-md-12 d-flex align-items-center">
-
-		            <div class="tab-content ftco-animate" id="v-pills-tabContent">
-
-		              <div class="tab-pane fade show active" id="v-pills-whatwedo" role="tabpanel" aria-labelledby="v-pills-whatwedo-tab">
-		              	<div>
-			                <h2 class="mb-4">We Offer High Quality Services</h2>
-			              	<p>We Offer High-Quality Services" is a straightforward and assertive statement commonly used by businesses and service providers to communicate their commitment to delivering services of excellent quality to their customers or clients. This statement aims to convey the message that the company takes pride in the level of service it provides and strives to meet or exceed customer expectations. It can be a key element of marketing and branding efforts to build trust and attract potential customers by highlighting the company's dedication to delivering top-notch products or services.</p>
-				            </div>
-		              </div>
-
-		              <div class="tab-pane fade" id="v-pills-mission" role="tabpanel" aria-labelledby="v-pills-mission-tab">
-		                <div>
-			                <h2 class="mb-4">To Accomodate All Patients</h2>
-			              	<p>Such a mission can be especially important in healthcare organizations or clinics that aim to serve diverse communities, address health disparities, and prioritize patient-centered care. It implies a commitment to not only welcoming patients from different backgrounds but also adapting services and facilities to accommodate various needs, including physical, cultural, linguistic, and accessibility requirements.</p>
-				            </div>
-		              </div>
-
-		              <div class="tab-pane fade" id="v-pills-goal" role="tabpanel" aria-labelledby="v-pills-goal-tab">
-		                <div>
-			                <h2 class="mb-4">Help Our Customers Needs</h2>
-			              	<p>Help Our Customers' Needs" is a customer-centric mission statement that underscores a company's commitment to providing assistance and support tailored to its customers' specific requirements. This mission statement communicates a dedication to understanding and addressing the unique needs, preferences, and challenges of each customer.</p>
-				            </div>
-		              </div>
-		            </div>
-		          </div>
-		        </div>
-		      </div>
-		    </div>
-    	</div>
-    </section>
-
-    <section class="ftco-section-2">
-    	<div class="container-wrap">
-      	<div class="row d-flex no-gutters">
-      		<div class="col-md-6 img" style="background-image: url({% static 'images/about-2.jpg' %});">
-      		</div>
-      		<div class="col-md-6 d-flex">
-      			<div class="about-wrap">
-      				<div class="heading-section heading-section-white mb-5 ftco-animate">
-		            <h2 class="mb-2">HolyCross with a personal touch</h2>
-		            <p>At HolyCross, we believe in treating every patient with empathy, respect, and individualized care. Our dedicated team of medical professionals doesn't just see you as a patient; </p>
-		          </div>
-      				<div class="list-services d-flex ftco-animate">
-      					<div class="icon d-flex justify-content-center align-items-center">
-      						<span class="icon-check2"></span>
-      					</div>
-      					<div class="text">
-	      					<h3>Well Experience Doctors</h3>
-	      					<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-      					</div>
-      				</div>
-      				<div class="list-services d-flex ftco-animate">
-      					<div class="icon d-flex justify-content-center align-items-center">
-      						<span class="icon-check2"></span>
-      					</div>
-      					<div class="text">
-	      					<h3>High Technology Facilities</h3>
-	      					<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-      					</div>
-      				</div>
-      				<div class="list-services d-flex ftco-animate">
-      					<div class="icon d-flex justify-content-center align-items-center">
-      						<span class="icon-check2"></span>
-      					</div>
-      					<div class="text">
-	      					<h3>Comfortable Clinics</h3>
-	      					<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-      					</div>
-      				</div>
-      			</div>
-      		</div>
-      	</div>
-      </div>
-    </section>
-
-  	<section class="ftco-section testimony-section bg-light">
-      <div class="container">
-        <div class="row justify-content-center mb-5 pb-3">
-          <div class="col-md-7 text-center heading-section ftco-animate">
-            <h2 class="mb-2">Testimony</h2>
-            <span class="subheading">Our Happy Customer Says</span>
-          </div>
-        </div>
-        <div class="row justify-content-center ftco-animate">
-          <div class="col-md-8">
-            <div class="carousel-testimony owl-carousel ftco-owl">
-                {% for i in bl %}
-              <div class="item">
-                <div class="testimony-wrap p-4 pb-5">
-                  <div class="user-img mb-5" style="background-image: url({% static 'images/person_1.jpg' %})">
-                    <span class="quote d-flex align-items-center justify-content-center">
-                      <i class="icon-quote-left"></i>
-                    </span>
-                  </div>
-                  <div class="text text-center">
-                      <p class="name">{{i.Name}}</p>
-                      <p class="mb-5">{{i.Subject}}</p>
-                    <p class="mb-5">{{i.Message}}</p>
-                  </div>
-                </div>
-
-              </div>
-                  {% endfor %}
-            </div>
-          </div>
+      <div class="col-lg-6">
+        <span class="eyebrow">Who we are</span>
+        <h2 class="section-title">Your health, your schedule</h2>
+        <p class="text-muted">HolyCross began with a simple idea: getting expert medical care should be straightforward. Today our {{ doctor_total }} specialists across {{ department_total }} departments see patients from across the region — and our online booking means you can reach the right doctor without the wait.</p>
+        <p class="text-muted">Every doctor profile lists qualifications, experience and languages spoken, so you can choose with confidence. Once you book, our front desk confirms your visit and you can follow its status from your patient account.</p>
+        <div class="row g-3 mt-2">
+          <div class="col-sm-6"><div class="d-flex gap-3"><span class="icon-pill"><i class="bi bi-bullseye"></i></span><div><strong>Our mission</strong><p class="text-muted small mb-0">Accessible, evidence-based care for every patient who walks through our doors.</p></div></div></div>
+          <div class="col-sm-6"><div class="d-flex gap-3"><span class="icon-pill accent"><i class="bi bi-eye"></i></span><div><strong>Our vision</strong><p class="text-muted small mb-0">A hospital where technology removes friction and people stay at the centre.</p></div></div></div>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <section class="ftco-section ftco-counter img" id="section-counter" style="background-image: url({% static 'images/bg_1.jpg' %});" data-stellar-background-ratio="0.5">
-    	<div class="container">
-    		<div class="row d-flex align-items-center">
-    			<div class="col-md-3 aside-stretch py-5">
-    				<div class=" heading-section heading-section-white ftco-animate pr-md-4">
-	            <h2 class="mb-3">Achievements</h2>
-	            <p>Achievements are a testament to dedication and hard work.</p>
-	          </div>
-    			</div>
-    			<div class="col-md-9 py-5 pl-md-5">
-		    		<div class="row">
-		          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
-		            <div class="block-18">
-		              <div class="text">
-		                <strong class="number" data-number="14">0</strong>
-		                <span>Years of Experience</span>
-		              </div>
-		            </div>
-		          </div>
-		          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
-		            <div class="block-18">
-		              <div class="text">
-		                <strong class="number" data-number="40">0</strong>
-		                <span>Qualified Doctors</span>
-		              </div>
-		            </div>
-		          </div>
-		          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
-		            <div class="block-18">
-		              <div class="text">
-		                <strong class="number" data-number="4200">0</strong>
-		                <span>Happy Smiling Customer</span>
-		              </div>
-		            </div>
-		          </div>
-		          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
-		            <div class="block-18">
-		              <div class="text">
-		                <strong class="number" data-number="320">0</strong>
-		                <span>Patients Per Year</span>
-		              </div>
-		            </div>
-		          </div>
-		        </div>
-		      </div>
-	      </div>
-    	</div>
-    </section>
-    <footer class="ftco-footer ftco-bg-dark ftco-section">
-      <div class="container">
-        <div class="row mb-5">
-          <div class="col-md-3">
-            <div class="ftco-footer-widget mb-4">
-              <h2 class="ftco-heading-2">HolyCross</h2>
-              <p>Welcome to HolyCross Health Scheduler! Our platform is designed to make managing your healthcare appointments as simple as possible.</p>
-            </div>
-            <ul class="ftco-footer-social list-unstyled float-md-left float-lft ">
-              <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
-              <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
-              <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
-            </ul>
-          </div>
-          <div class="col-md-2">
-            <div class="ftco-footer-widget mb-4 ml-md-5">
-              <h2 class="ftco-heading-2">Quick Links</h2>
-              <ul class="list-unstyled">
-                <li><a href="{% url 'index' %}" class="py-2 d-block">Home</a></li>
-                <li><a href="{% url 'aboutus' %}" class="py-2 d-block">About</a></li>
-                <li><a href="{% url 'service' %}" class="py-2 d-block">Service</a></li>
-                <li><a href="{% url 'blog' %}" class="py-2 d-block">Blog</a></li>
-                <li><a href="{% url 'contact' %}" class="py-2 d-block">Contact</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-md-4 pr-md-4">
-            <div class="ftco-footer-widget mb-4">
-              <h2 class="ftco-heading-2">Recent Blog</h2>
-              <div class="block-21 mb-4 d-flex">
-                <a class="blog-img mr-4" style="background-image: url({% static 'images/image_1.jpg' %});"></a>
-                <div class="text">
-                  <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about</a></h3>
-                  <div class="meta">
-                    <div><a href="#"><span class="icon-calendar"></span> Sept 15, 2018</a></div>
-                    <div><a href="#"><span class="icon-person"></span> Admin</a></div>
-                    <div><a href="#"><span class="icon-chat"></span> 19</a></div>
-                  </div>
-                </div>
-              </div>
-              <div class="block-21 mb-4 d-flex">
-                <a class="blog-img mr-4" style="background-image: url({% static 'images/image_2.jpg' %});"></a>
-                <div class="text">
-                  <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about</a></h3>
-                  <div class="meta">
-                    <div><a href="#"><span class="icon-calendar"></span> Sept 15, 2018</a></div>
-                    <div><a href="#"><span class="icon-person"></span> Admin</a></div>
-                    <div><a href="#"><span class="icon-chat"></span> 19</a></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="ftco-footer-widget mb-4">
-            	<h2 class="ftco-heading-2">Office</h2>
-            	<div class="block-23 mb-3">
-	              <ul>
-	                <li><span class="icon icon-map-marker"></span><span class="text">Holy Cross Hospital, Kochi, Kerala, India</span></li>
-	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+91 8590569016</span></a></li>
-	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">holycross@gmail.com</span></a></li>
-	              </ul>
-	            </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12 text-center">
-          </div>
-        </div>
+<section class="section bg-soft">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="eyebrow">Our values</span>
+      <h2 class="section-title">What guides our care</h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3"><div class="hc-card feature"><span class="icon-pill"><i class="bi bi-heart"></i></span><h3>Compassion</h3><p>We listen first and treat every patient with dignity and respect.</p></div></div>
+      <div class="col-md-6 col-lg-3"><div class="hc-card feature"><span class="icon-pill accent"><i class="bi bi-clipboard2-pulse"></i></span><h3>Clinical excellence</h3><p>Evidence-based protocols and continuous training for our teams.</p></div></div>
+      <div class="col-md-6 col-lg-3"><div class="hc-card feature"><span class="icon-pill"><i class="bi bi-chat-heart"></i></span><h3>Transparency</h3><p>Clear explanations of diagnoses, options and costs — no surprises.</p></div></div>
+      <div class="col-md-6 col-lg-3"><div class="hc-card feature"><span class="icon-pill accent"><i class="bi bi-lock"></i></span><h3>Privacy</h3><p>Patient information is handled securely and only shared with your care team.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container">
+    <div class="stats-band">
+      <div class="row g-4 text-center">
+        <div class="col-6 col-md-3 stat"><strong data-count="20" data-suffix="+">20+</strong><span>Years of service</span></div>
+        <div class="col-6 col-md-3 stat"><strong data-count="{{ doctor_total }}">{{ doctor_total }}</strong><span>Specialist doctors</span></div>
+        <div class="col-6 col-md-3 stat"><strong data-count="{{ department_total }}">{{ department_total }}</strong><span>Departments</span></div>
+        <div class="col-6 col-md-3 stat"><strong>24/7</strong><span>Emergency care</span></div>
       </div>
-    </footer>
+    </div>
+  </div>
+</section>
 
-  <script src="{% static 'js/jquery.min.js' %}"></script>
-  <script src="{% static 'js/jquery-migrate-3.0.1.min.js' %}"></script>
-  <script src="{% static 'js/popper.min.js' %}"></script>
-  <script src="{% static 'js/bootstrap.min.js' %}"></script>
-  <script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
-  <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-  <script src="{% static 'js/jquery.stellar.min.js' %}"></script>
-  <script src="{% static 'js/owl.carousel.min.js' %}"></script>
-  <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
-  <script src="{% static 'js/aos.js' %}"></script>
-  <script src="{% static 'js/jquery.animateNumber.min.js' %}"></script>
-  <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
-  <script src="{% static 'js/jquery.timepicker.min.js' %}"></script>
-  <script src="{% static 'js/scrollax.min.js' %}"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-  <script src="{% static 'js/google-map.js' %}"></script>
-  <script src="{% static 'js/main.js' %}"></script>
-
-  </body>
-</html>
+{% if stories %}
+<section class="section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="eyebrow">Patient stories</span>
+      <h2 class="section-title">In their words</h2>
+    </div>
+    <div class="row g-4">
+      {% for story in stories %}
+      <div class="col-md-4">
+        <figure class="story-card m-0">
+          <span class="quote"><i class="bi bi-quote"></i></span>
+          <h3>{{ story.Subject }}</h3>
+          <blockquote class="m-0"><p>{{ story.Message|truncatewords:40 }}</p></blockquote>
+          <figcaption class="who"><span class="avatar">{{ story.Name|first|upper }}</span>{{ story.Name }}</figcaption>
+        </figure>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}
